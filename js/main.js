@@ -16,6 +16,9 @@ function handleSubmit(event) {
   formData.title = $journalForm.elements.title.value;
   formData['photo-url'] = $journalForm.elements['photo-url'].value;
   formData.notes = $journalForm.elements.notes.value;
+  formData.entryID = data.nextEntryId;
+  data.nextEntryId++;
+  data.entries.unshift(formData);
   $journalForm.reset();
-  $image.setAttribute('src', 'images/placeholder-image-square.jpg');
+  $image.setAttribute('src', 'images/placeholder-image-square.jpg'); // reset image to default
 }
