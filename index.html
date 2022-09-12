@@ -16,26 +16,41 @@
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <div class="container">
-    <header>
-      <div class="header">
-        <h2 class="m-0">Code Journal</h2>
-      </div>
-    </header>
-    <main>
-      <div class="row column-full">
-        <h1>New Entry</h1>
-      </div>
-      <div class="row column-half">
-        <img src="images/placeholder-image-square.jpg" alt="placeholder-img">
-      </div>
-      <div data-view="entry-form">
-        <form action="" method="GET">
-          <div></div>
-        </form>
-      </div>
-    </main>
+
+  <div class="header-bg-wrapper purple-bg">
+    <div class="container">
+      <header class="row column-full ptb-half-rem">
+        <h2 class="m-0 text-white">Code Journal</h2>
+      </header>
+    </div>
   </div>
+
+  <main class="container">
+    <div class="row column-full">
+      <h1>New Entry</h1>
+    </div>
+    <div class="row column-half">
+      <img src="images/placeholder-image-square.jpg" alt="placeholder-img">
+    </div>
+
+    <div data-view="entry-form">
+      <form action="" method="GET">
+        <div>
+          <label for="title">Title</label>
+          <input type="text" name="title" id="title" />
+        </div>
+        <div>
+          <label for="photo-url">Photo URL</label>
+          <input type="text" name="photo-url" id="photo-url" />
+        </div>
+        <div>
+          <label for="Notes">Notes</label>
+          <input type="text" name="notes" id="notes" />
+        </div>
+      </form>
+    </div>
+  </main>
+
   <script src="js/data.js"></script>
   <script src="js/main.js"></script>
 </body>
