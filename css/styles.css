@@ -1,0 +1,22 @@
+body {
+  background-color: #f0f0f0;
+}
+
+img {
+  height: 400px;
+  width: 100%;
+  object-fit: cover;
+}
+
+/* header */
+.header {
+  background-color: #562b81;
+  color: white;
+  padding: 10px;
+}
+
+.m-0 {
+  margin: 0;
+}
+
+/* header */
