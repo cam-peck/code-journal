@@ -19,7 +19,7 @@
 
   <div class="header-bg-wrapper purple-bg">
     <div class="container">
-      <header class="row column-full ptb-half-rem">
+      <header class="container row column-full ptb-half-rem">
         <h2 class="m-0 text-white">Code Journal</h2>
       </header>
     </div>
@@ -35,17 +35,20 @@
 
     <div data-view="entry-form">
       <form action="" method="GET">
-        <div>
+        <div class="row column-half">
           <label for="title">Title</label>
-          <input type="text" name="title" id="title" />
+          <input class="width-100" type="text" name="title" id="title" />
         </div>
-        <div>
+        <div class="row column-half">
           <label for="photo-url">Photo URL</label>
-          <input type="text" name="photo-url" id="photo-url" />
+          <input class="width-100" type="text" name="photo-url" id="photo-url" />
         </div>
-        <div>
+        <div class="row column-full">
           <label for="Notes">Notes</label>
-          <input type="text" name="notes" id="notes" />
+          <input class="width-100" type="text" name="notes" id="notes" />
+        </div>
+        <div class="row column-full">
+          <button class="submit-btn purple-bg text-white" type="submit">SAVE</button>
         </div>
       </form>
     </div>
