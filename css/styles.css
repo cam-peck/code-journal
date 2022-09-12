@@ -3,11 +3,6 @@ body {
   font-family: Helvetica, Arial, sans-serif;
 }
 
-h1 {
-  font-weight: bold;
-  font-size: 2rem;
-}
-
 h2 {
   font-weight: normal;
   font-size: 1.25rem;
@@ -22,10 +17,6 @@ img {
 }
 
 /* header */
-
-.header-bg-wrapper {
-  width: 100%;
-}
 
 .purple-bg {
   background-color: #562b81;
@@ -54,12 +45,10 @@ label {
 input,
 textarea {
   font-family: Helvetica, Arial, sans-serif;
-  font-size: 1rem;
   padding: 0.5rem;
   border: 1px solid #d5d5d5;
   border-radius: 3px;
   margin-bottom: 1.25rem;
-  font-weight: normal;
 }
 
 textarea {
@@ -80,7 +69,6 @@ textarea:focus {
   border: 2px solid #562b81;
   border-radius: 5px;
   padding: 0.5rem 0.75rem;
-  font-size: 0.75rem;
 }
 
 .submit-btn:hover {
