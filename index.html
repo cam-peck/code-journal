@@ -17,37 +17,40 @@
 </head>
 <body>
 
-  <div class="header-bg-wrapper purple-bg">
+  <div class="header-bg-wrapper purple-bg ptb-half-rem">
     <div class="container">
-      <header class="container row column-full ptb-half-rem">
+      <header class="row column-full">
         <h2 class="m-0 text-white">Code Journal</h2>
       </header>
     </div>
   </div>
 
   <main class="container">
-    <div class="row column-full">
-      <h1>New Entry</h1>
-    </div>
-    <div class="row column-half">
-      <img src="images/placeholder-image-square.jpg" alt="placeholder-img">
-    </div>
-
     <div data-view="entry-form">
       <form action="" method="GET">
-        <div class="row column-half">
-          <label for="title">Title</label>
-          <input class="width-100" type="text" name="title" id="title" />
+        <div class="row column-full">
+          <h1>New Entry</h1>
         </div>
-        <div class="row column-half">
-          <label for="photo-url">Photo URL</label>
-          <input class="width-100" type="text" name="photo-url" id="photo-url" />
+        <div class="row">
+          <div class="column-half">
+            <img src="images/placeholder-image-square.jpg" alt="placeholder-img">
+          </div>
+          <div class="column-half">
+            <div class="row">
+              <label for="title">Title</label>
+              <input class="width-100" type="text" name="title" id="title" />
+            </div>
+            <div class="row">
+              <label for="photo-url">Photo URL</label>
+              <input class="width-100" type="text" name="photo-url" id="photo-url" />
+            </div>
+          </div>
         </div>
         <div class="row column-full">
-          <label for="Notes">Notes</label>
-          <input class="width-100" type="text" name="notes" id="notes" />
+          <label for="notes">Notes</label>
+          <textarea class="width-100" rows="6" name="notes" id="notes"></textarea>
         </div>
-        <div class="row column-full">
+        <div class="row column-full justify-end">
           <button class="submit-btn purple-bg text-white" type="submit">SAVE</button>
         </div>
       </form>
