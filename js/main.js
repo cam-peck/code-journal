@@ -77,8 +77,13 @@ function renderEntry(entry) { // creates DOM tree for an individual entry
    *     <img src="" alt="">
    *   </li>
    *   <li class="column-half">
-   *     <h2 class="entry-title"></h2>
-   *     <p class="entry-description">
+   *     <div class="row space-between">
+   *       <h2 class="entry-title"></h2>
+   *       <i class="fa-regular fa-pen-to-square"></i>
+   *     </div>
+   *     <div class="row"
+   *       <p class="entry-description">
+   *     </div>
    *   </li>
    * </ul>
   */
@@ -95,17 +100,28 @@ function renderEntry(entry) { // creates DOM tree for an individual entry
   var $textLi = document.createElement('li');
   $textLi.classList = 'column-half';
 
+  var $rowTitleDiv = document.createElement('div');
+  $rowTitleDiv.classList = 'row space-between align-center';
+
   var $h2Tag = document.createElement('h2');
-  $h2Tag.classList = 'entry-title';
+  $h2Tag.classList = 'entry-title m-0';
   $h2Tag.textContent = entry.title;
+
+  var $editIcon = document.createElement('i');
+  $editIcon.classList = 'fa-solid fa-pen-to-square fa-xl';
+
+  var $rowNotesDiv = document.createElement('div');
+  $rowNotesDiv.classList = 'row';
 
   var $pTag = document.createElement('p');
   $pTag.classList = 'entry-description';
   $pTag.textContent = entry.notes;
 
-  $entry.append($imageLi, $textLi);
+  $rowTitleDiv.append($h2Tag, $editIcon);
+  $rowNotesDiv.append($pTag);
   $imageLi.append($imageTag);
-  $textLi.append($h2Tag, $pTag);
+  $textLi.append($rowTitleDiv, $rowNotesDiv);
+  $entry.append($imageLi, $textLi);
 
   return $entry;
 }
