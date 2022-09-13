@@ -16,10 +16,47 @@
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <header>
-  </header>
-  <main>
+
+  <div class="header-bg-wrapper purple-bg ptb-half-rem">
+    <div class="container">
+      <header class="row column-full">
+        <h2 class="m-0 text-white">Code Journal</h2>
+      </header>
+    </div>
+  </div>
+
+  <main class="container">
+    <div data-view="entry-form">
+      <form action="" method="GET">
+        <div class="row column-full">
+          <h1>New Entry</h1>
+        </div>
+        <div class="row">
+          <div class="column-half">
+            <img src="images/placeholder-image-square.jpg" alt="placeholder-img" onerror="javascript:alert('Image failed to load.')">
+          </div>
+          <div class="column-half">
+            <div class="row">
+              <label for="title">Title</label>
+              <input class="width-100" type="text" name="title" id="title" required/>
+            </div>
+            <div class="row">
+              <label for="photo-url">Photo URL</label>
+              <input class="width-100" type="text" name="photo-url" id="photo-url" required/>
+            </div>
+          </div>
+        </div>
+        <div class="row column-full">
+          <label for="notes">Notes</label>
+          <textarea class="width-100" rows="6" name="notes" id="notes" required></textarea>
+        </div>
+        <div class="row column-full justify-end">
+          <button class="submit-btn purple-bg text-white" type="submit">SAVE</button>
+        </div>
+      </form>
+    </div>
   </main>
+
   <script src="js/data.js"></script>
   <script src="js/main.js"></script>
 </body>
