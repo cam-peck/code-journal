@@ -2,6 +2,7 @@ var $journalForm = document.querySelector('form');
 var $photoUrlInput = document.querySelector('#photo-url');
 var $image = document.querySelector('img');
 var $entryNav = document.querySelector('.entry-nav');
+var $newEntryButton = document.querySelector('.new-entry');
 
 $photoUrlInput.addEventListener('input', handleImageUrl);
 
@@ -10,6 +11,8 @@ $journalForm.addEventListener('submit', handleSubmit);
 window.addEventListener('DOMContentLoaded', renderEntry(data));
 
 $entryNav.addEventListener('click', showEntries);
+
+$newEntryButton.addEventListener('click', showEntries);
 
 function handleImageUrl(event) { // handles input urls from entry form and renders them
   if (isImage($photoUrlInput.value)) {
@@ -77,13 +80,13 @@ function renderEntry(entry) { // renders entries from localstorage into index.ht
   }
 }
 
-function showEntries(event) {
+function showEntries(event) { // iterates through all data-views, showing only the event-linked view
   var $dataViews = document.querySelectorAll('[data-view]');
   for (let i = 0; i < $dataViews.length; i++) {
-    if ($dataViews[i].getAttribute('data-view') === event.target.textContent.toLowerCase()) {
-      $dataViews[i].classList = '';
+    if ($dataViews[i].getAttribute('data-view') === event.target.id) {
+      $dataViews[i].classList = ''; // show data-view
     } else {
-      $dataViews[i].classList = 'hidden';
+      $dataViews[i].classList = 'hidden'; // hide data-view
     }
   }
 }

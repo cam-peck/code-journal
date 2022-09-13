@@ -16,6 +16,15 @@ img {
   margin-bottom: 1rem;
 }
 
+button:hover {
+  cursor: pointer;
+  color: lightgray;
+}
+
+button:active {
+  transform: translateY(0.1rem);
+}
+
 a {
   text-decoration: none;
   color: white;
@@ -88,11 +97,6 @@ textarea:focus {
   padding: 0.5rem 0.75rem;
 }
 
-.submit-btn:hover {
-  cursor: pointer;
-  color: lightgray;
-}
-
 .justify-end {
   justify-content: end;
 }
@@ -102,6 +106,14 @@ textarea:focus {
 ul {
   list-style: none;
   padding-left: 0;
+}
+
+button.new-entry {
+  border: 1px solid #562b81;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: bold;
 }
 
 .entry-title {
@@ -118,4 +130,8 @@ ul {
 
 .mb-1-rem {
   margin-bottom: 1rem;
+}
+
+.justify-between {
+  justify-content: space-between;
 }
