@@ -5,7 +5,13 @@ var $image = document.querySelector('img');
 $photoUrlInput.addEventListener('input', handleImageUrl);
 
 function handleImageUrl(event) {
-  $image.setAttribute('src', $photoUrlInput.value);
+  if (isImage($photoUrlInput.value)) {
+    $image.setAttribute('src', $photoUrlInput.value);
+  }
+}
+
+function isImage(url) {
+  return /\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(url);
 }
 
 $journalForm.addEventListener('submit', handleSubmit);
