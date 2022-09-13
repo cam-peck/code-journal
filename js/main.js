@@ -1,12 +1,15 @@
 var $journalForm = document.querySelector('form');
 var $photoUrlInput = document.querySelector('#photo-url');
 var $image = document.querySelector('img');
+var $entryNav = document.querySelector('.entry-nav');
 
 $photoUrlInput.addEventListener('input', handleImageUrl);
 
 $journalForm.addEventListener('submit', handleSubmit);
 
 window.addEventListener('DOMContentLoaded', renderEntry(data));
+
+$entryNav.addEventListener('click', showEntries);
 
 function handleImageUrl(event) { // handles input urls from entry form and renders them
   if (isImage($photoUrlInput.value)) {
@@ -71,5 +74,16 @@ function renderEntry(entry) { // renders entries from localstorage into index.ht
     $textLi.append($h2Tag, $pTag);
 
     $entryContainer.append($entry);
+  }
+}
+
+function showEntries(event) {
+  var $dataViews = document.querySelectorAll('[data-view]');
+  for (let i = 0; i < $dataViews.length; i++) {
+    if ($dataViews[i].getAttribute('data-view') === event.target.textContent.toLowerCase()) {
+      $dataViews[i].classList = '';
+    } else {
+      $dataViews[i].classList = 'hidden';
+    }
   }
 }

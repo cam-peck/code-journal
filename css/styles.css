@@ -16,6 +16,15 @@ img {
   margin-bottom: 1rem;
 }
 
+a {
+  text-decoration: none;
+  color: white;
+}
+
+a:active {
+  color: lightgray;
+}
+
 /* Header */
 
 .purple-bg {
