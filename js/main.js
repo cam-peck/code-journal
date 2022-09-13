@@ -1,3 +1,5 @@
+// DOM Queries
+
 var $journalForm = document.querySelector('form');
 var $photoUrlInput = document.querySelector('#photo-url');
 var $image = document.querySelector('img');
@@ -5,24 +7,28 @@ var $entryNav = document.querySelector('.entry-nav');
 var $newEntryButton = document.querySelector('.new-entry');
 var $entryContainer = document.querySelector('.entry-container');
 
-$photoUrlInput.addEventListener('input', handleImageUrl);
+// Event Listeners
 
-$journalForm.addEventListener('submit', function (event) {
+$photoUrlInput.addEventListener('input', handleImageUrl); // loads photo when url is added to input field
+
+$journalForm.addEventListener('submit', function (event) { // passes form data into storage and swaps the view to entries
   handleSubmit(event);
   viewSwap('entries');
 });
 
-window.addEventListener('DOMContentLoaded', function (event) {
+window.addEventListener('DOMContentLoaded', function (event) { // loads previous session data (if present) after DOM load
   renderEntry(data);
 });
 
-$entryNav.addEventListener('click', function (event) {
+$entryNav.addEventListener('click', function (event) { // swaps view to entries
   viewSwap('entries');
 });
 
-$newEntryButton.addEventListener('click', function (event) {
+$newEntryButton.addEventListener('click', function (event) { // swaps view to entry form
   viewSwap('entry-form');
 });
+
+// Functions
 
 function handleImageUrl(event) { // handles input urls from entry form and renders them
   if (isImage($photoUrlInput.value)) {
@@ -61,7 +67,13 @@ function renderEntry(entry) { // renders entries from localstorage into index.ht
    *   </li>
    * </ul>
   */
-  for (let i = 0; i < entry.entries.length; i++) {
+  if (entry.entries.length === 0) { // if entries if empty, display default text
+    var $defaultText = document.createElement('p');
+    $defaultText.className = 'text-center';
+    $defaultText.textContent = 'No entries have been recorded... yet!';
+    $entryContainer.append($defaultText);
+  }
+  for (let i = 0; i < entry.entries.length; i++) { // otherwise, clear old data and re-render with new entries added
     var $entry = document.createElement('ul');
     $entry.classList = 'row mb-1-rem';
 
@@ -91,7 +103,7 @@ function renderEntry(entry) { // renders entries from localstorage into index.ht
   }
 }
 
-function viewSwap(string) { // iterates through all data-views, showing only the event-linked view
+function viewSwap(string) { // swaps to the data-view passed into the function & hides other data-views
   var $dataViews = document.querySelectorAll('[data-view]');
   for (let i = 0; i < $dataViews.length; i++) {
     if ($dataViews[i].getAttribute('data-view') === string) {
