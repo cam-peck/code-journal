@@ -89,6 +89,7 @@ function renderEntry(entry) { // creates DOM tree for an individual entry
   */
   var $entry = document.createElement('ul');
   $entry.classList = 'row mb-1-rem';
+  $entry.setAttribute('data-entry-id', entry.entryID);
 
   var $imageLi = document.createElement('li');
   $imageLi.classList = 'column-half';
