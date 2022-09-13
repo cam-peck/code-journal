@@ -3,16 +3,26 @@ var $photoUrlInput = document.querySelector('#photo-url');
 var $image = document.querySelector('img');
 var $entryNav = document.querySelector('.entry-nav');
 var $newEntryButton = document.querySelector('.new-entry');
+var $entryContainer = document.querySelector('.entry-container');
 
 $photoUrlInput.addEventListener('input', handleImageUrl);
 
-$journalForm.addEventListener('submit', handleSubmit);
+$journalForm.addEventListener('submit', function (event) {
+  handleSubmit(event);
+  viewSwap('entries');
+});
 
-window.addEventListener('DOMContentLoaded', renderEntry(data));
+window.addEventListener('DOMContentLoaded', function (event) {
+  renderEntry(data);
+});
 
-$entryNav.addEventListener('click', showEntries);
+$entryNav.addEventListener('click', function (event) {
+  viewSwap('entries');
+});
 
-$newEntryButton.addEventListener('click', showEntries);
+$newEntryButton.addEventListener('click', function (event) {
+  viewSwap('entry-form');
+});
 
 function handleImageUrl(event) { // handles input urls from entry form and renders them
   if (isImage($photoUrlInput.value)) {
@@ -33,6 +43,8 @@ function handleSubmit(event) { // handles the submit event on the new entry form
   formData.entryID = data.nextEntryId;
   data.nextEntryId++;
   data.entries.unshift(formData);
+  $entryContainer.textContent = ''; // clears the old entry data
+  renderEntry(data); // data was just updated, re-render the entries page
   $journalForm.reset();
   $image.setAttribute('src', 'images/placeholder-image-square.jpg'); // reset image to default
 }
@@ -49,7 +61,6 @@ function renderEntry(entry) { // renders entries from localstorage into index.ht
    *   </li>
    * </ul>
   */
-  var $entryContainer = document.querySelector('.entry-container');
   for (let i = 0; i < entry.entries.length; i++) {
     var $entry = document.createElement('ul');
     $entry.classList = 'row mb-1-rem';
@@ -80,13 +91,13 @@ function renderEntry(entry) { // renders entries from localstorage into index.ht
   }
 }
 
-function showEntries(event) { // iterates through all data-views, showing only the event-linked view
+function viewSwap(string) { // iterates through all data-views, showing only the event-linked view
   var $dataViews = document.querySelectorAll('[data-view]');
   for (let i = 0; i < $dataViews.length; i++) {
-    if ($dataViews[i].getAttribute('data-view') === event.target.id) {
-      $dataViews[i].classList = ''; // show data-view
+    if ($dataViews[i].getAttribute('data-view') === string) {
+      $dataViews[i].className = '';
     } else {
-      $dataViews[i].classList = 'hidden'; // hide data-view
+      $dataViews[i].className = 'hidden';
     }
   }
 }
