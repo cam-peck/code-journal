@@ -6,17 +6,23 @@ var $image = document.querySelector('img');
 var $entryNav = document.querySelector('.entry-nav');
 var $newEntryButton = document.querySelector('.new-entry');
 var $entryContainer = document.querySelector('.entry-container');
-
+var $defaultText = createDefaultText();
 // Event Listeners
 
 $photoUrlInput.addEventListener('input', handleImageUrl); // loads photo when url is added to input field
 
 $journalForm.addEventListener('submit', function (event) { // passes form data into storage and swaps the view to entries
+  if (data.entries.length === 0) {
+    $defaultText.remove();
+  }
   handleSubmit(event);
   viewSwap('entries');
 });
 
 window.addEventListener('DOMContentLoaded', function (event) { // loads previous session data (if present) after DOM loads
+  if (data.entries.length === 0) { // if entries if empty, display default text
+    $entryContainer.append($defaultText);
+  }
   for (let i = 0; i < data.entries.length; i++) {
     var previousEntry = renderEntry(data.entries[i]);
     $entryContainer.append(previousEntry);
@@ -55,6 +61,13 @@ function handleSubmit(event) { // handles the submit event on the new entry form
   $entryContainer.prepend(renderEntry(formData)); // add the new image to the top of the container
   $journalForm.reset();
   $image.setAttribute('src', 'images/placeholder-image-square.jpg'); // reset image to default
+}
+
+function createDefaultText() { // creates default text if there are no previous entries
+  var output = document.createElement('p');
+  output.className = 'text-center default-text';
+  output.textContent = 'No entries have been recorded... yet!';
+  return output;
 }
 
 function renderEntry(entry) { // creates DOM tree for an individual entry
