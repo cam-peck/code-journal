@@ -17,16 +17,19 @@
 </head>
 <body>
 
-  <div class="header-bg-wrapper purple-bg ptb-half-rem">
+  <header class="header-bg-wrapper purple-bg ptb-half-rem">
     <div class="container">
-      <header class="row column-full">
+      <div class="row align-center column-full">
         <h2 class="m-0 text-white">Code Journal</h2>
-      </header>
+        <nav class="ml-2-rem">
+          <p class="m-0 text-white"><a class="entry-nav" id="entries" href="#">Entries</a></p>
+        </nav>
+      </div>
     </div>
-  </div>
+  </header>
 
   <main class="container">
-    <div data-view="entry-form">
+    <div class="hidden" data-view="entry-form">
       <form action="" method="GET">
         <div class="row column-full">
           <h1>New Entry</h1>
@@ -54,6 +57,14 @@
           <button class="submit-btn purple-bg text-white" type="submit">SAVE</button>
         </div>
       </form>
+    </div>
+
+    <div class="" data-view="entries">
+      <div class="row column-full justify-between align-center">
+        <h1 class="">Entries</h1>
+        <button class="purple-bg text-white new-entry" type="button">NEW</button>
+      </div>
+      <div class="entry-container"></div>
     </div>
   </main>
 
