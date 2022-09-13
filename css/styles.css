@@ -16,7 +16,7 @@ img {
   margin-bottom: 1rem;
 }
 
-/* header */
+/* Header */
 
 .purple-bg {
   background-color: #562b81;
@@ -34,7 +34,7 @@ img {
   padding: 0.75rem 0;
 }
 
-/* form */
+/* Add Entries */
 
 label {
   font-weight: bold;
@@ -78,4 +78,26 @@ textarea:focus {
 
 .justify-end {
   justify-content: end;
+}
+
+/* View Entries */
+
+ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.entry-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 0;
+}
+
+.entry-description {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.mb-1-rem {
+  margin-bottom: 1rem;
 }
