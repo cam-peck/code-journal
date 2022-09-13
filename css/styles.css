@@ -34,6 +34,14 @@ img {
   padding: 0.75rem 0;
 }
 
+.align-center {
+  align-items: center;
+}
+
+.ml-2-rem {
+  margin-left: 2rem;
+}
+
 /* Add Entries */
 
 label {

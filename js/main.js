@@ -31,7 +31,7 @@ function handleSubmit(event) { // handles the submit event on the new entry form
   $image.setAttribute('src', 'images/placeholder-image-square.jpg'); // reset image to default
 }
 
-function renderEntry(entry) {
+function renderEntry(entry) { // renders entries from localstorage into index.html
   /**
    * <ul class="row mb-1-rem">
    *   <li class="column-half">
