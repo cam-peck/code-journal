@@ -16,8 +16,11 @@ $journalForm.addEventListener('submit', function (event) { // passes form data i
   viewSwap('entries');
 });
 
-window.addEventListener('DOMContentLoaded', function (event) { // loads previous session data (if present) after DOM load
-  renderEntry(data);
+window.addEventListener('DOMContentLoaded', function (event) { // loads previous session data (if present) after DOM loads
+  for (let i = 0; i < data.entries.length; i++) {
+    var previousEntry = renderEntry(data.entries[i]);
+    $entryContainer.append(previousEntry);
+  }
 });
 
 $entryNav.addEventListener('click', function (event) { // swaps view to entries
@@ -49,13 +52,12 @@ function handleSubmit(event) { // handles the submit event on the new entry form
   formData.entryID = data.nextEntryId;
   data.nextEntryId++;
   data.entries.unshift(formData);
-  $entryContainer.textContent = ''; // clears the old entry data
-  renderEntry(data); // data was just updated, re-render the entries page
+  $entryContainer.prepend(renderEntry(formData)); // add the new image to the top of the container
   $journalForm.reset();
   $image.setAttribute('src', 'images/placeholder-image-square.jpg'); // reset image to default
 }
 
-function renderEntry(entry) { // renders entries from localstorage into index.html
+function renderEntry(entry) { // creates DOM tree for an individual entry
   /**
    * <ul class="row mb-1-rem">
    *   <li class="column-half">
@@ -67,40 +69,32 @@ function renderEntry(entry) { // renders entries from localstorage into index.ht
    *   </li>
    * </ul>
   */
-  if (entry.entries.length === 0) { // if entries if empty, display default text
-    var $defaultText = document.createElement('p');
-    $defaultText.className = 'text-center';
-    $defaultText.textContent = 'No entries have been recorded... yet!';
-    $entryContainer.append($defaultText);
-  }
-  for (let i = 0; i < entry.entries.length; i++) { // otherwise, clear old data and re-render with new entries added
-    var $entry = document.createElement('ul');
-    $entry.classList = 'row mb-1-rem';
+  var $entry = document.createElement('ul');
+  $entry.classList = 'row mb-1-rem';
 
-    var $imageLi = document.createElement('li');
-    $imageLi.classList = 'column-half';
+  var $imageLi = document.createElement('li');
+  $imageLi.classList = 'column-half';
 
-    var $imageTag = document.createElement('img');
-    $imageTag.setAttribute('src', entry.entries[i]['photo-url']);
-    $imageTag.setAttribute('alt', `${entry.entries[i].title}-img`);
+  var $imageTag = document.createElement('img');
+  $imageTag.setAttribute('src', entry['photo-url']);
+  $imageTag.setAttribute('alt', `${entry.title}-img`);
 
-    var $textLi = document.createElement('li');
-    $textLi.classList = 'column-half';
+  var $textLi = document.createElement('li');
+  $textLi.classList = 'column-half';
 
-    var $h2Tag = document.createElement('h2');
-    $h2Tag.classList = 'entry-title';
-    $h2Tag.textContent = entry.entries[i].title;
+  var $h2Tag = document.createElement('h2');
+  $h2Tag.classList = 'entry-title';
+  $h2Tag.textContent = entry.title;
 
-    var $pTag = document.createElement('p');
-    $pTag.classList = 'entry-description';
-    $pTag.textContent = entry.entries[i].notes;
+  var $pTag = document.createElement('p');
+  $pTag.classList = 'entry-description';
+  $pTag.textContent = entry.notes;
 
-    $entry.append($imageLi, $textLi);
-    $imageLi.append($imageTag);
-    $textLi.append($h2Tag, $pTag);
+  $entry.append($imageLi, $textLi);
+  $imageLi.append($imageTag);
+  $textLi.append($h2Tag, $pTag);
 
-    $entryContainer.append($entry);
-  }
+  return $entry;
 }
 
 function viewSwap(string) { // swaps to the data-view passed into the function & hides other data-views
