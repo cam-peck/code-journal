@@ -5,6 +5,8 @@ var $journalFormTitle = document.querySelector('form h1');
 var $journalFormDeleteRow = document.querySelector('.delete');
 var $journalFormDeleteBtn = document.querySelector('.link-btn');
 var $deleteModal = document.querySelector('.modal');
+var $modalCancel = document.querySelector('.close-modal');
+// var $modalConfirm = document.querySelector('.confirm-modal');
 var $photoUrlInput = document.querySelector('#photo-url');
 var $image = document.querySelector('img');
 var $entryNav = document.querySelector('.entry-nav');
@@ -60,6 +62,10 @@ $entryUl.addEventListener('click', function (event) { // edit an entry
 
 $journalFormDeleteBtn.addEventListener('click', function (event) { // pull up model when delete button is clicked
   $deleteModal.className = 'modal';
+});
+
+$modalCancel.addEventListener('click', function (event) {
+  $deleteModal.className = 'modal hidden';
 });
 
 // Functions
