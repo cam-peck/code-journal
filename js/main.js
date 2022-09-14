@@ -158,7 +158,7 @@ function renderEntry(entry) { // creates DOM tree for an individual entry
    *     <img src="" alt="">
    *   </div
    *   <div class="column-half">
-   *     <div class="row space-between">
+   *     <div class="row align-center">
    *       <h2 class="entry-title"></h2>
    *       <i class="fa-regular fa-pen-to-square"></i>
    *     </div>
@@ -183,14 +183,14 @@ function renderEntry(entry) { // creates DOM tree for an individual entry
   $textDiv.classList = 'column-half';
 
   var $rowTitleDiv = document.createElement('div');
-  $rowTitleDiv.classList = 'row space-between align-center';
+  $rowTitleDiv.classList = 'row align-baseline';
 
   var $h2Tag = document.createElement('h2');
-  $h2Tag.classList = 'entry-title m-0';
+  $h2Tag.classList = 'entry-title m-0 flex-basis-90';
   $h2Tag.textContent = entry.title;
 
   var $editIcon = document.createElement('i');
-  $editIcon.classList = 'fa-solid fa-pen-to-square fa-xl';
+  $editIcon.classList = 'fa-solid fa-pen-to-square fa-xl flex-basis-10';
 
   var $rowNotesDiv = document.createElement('div');
   $rowNotesDiv.classList = 'row';
