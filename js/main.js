@@ -5,8 +5,9 @@ var $photoUrlInput = document.querySelector('#photo-url');
 var $image = document.querySelector('img');
 var $entryNav = document.querySelector('.entry-nav');
 var $newEntryButton = document.querySelector('.new-entry');
-var $entryContainer = document.querySelector('.entry-container');
+var $entryUl = document.querySelector('.entry-ul');
 var $defaultText = createDefaultText();
+
 // Event Listeners
 
 $photoUrlInput.addEventListener('input', handleImageUrl); // loads photo when url is added to input field
@@ -21,11 +22,11 @@ $journalForm.addEventListener('submit', function (event) { // passes form data i
 
 window.addEventListener('DOMContentLoaded', function (event) { // loads previous session data (if present) after DOM loads
   if (data.entries.length === 0) { // if entries if empty, display default text
-    $entryContainer.append($defaultText);
+    $entryUl.append($defaultText);
   }
   for (let i = 0; i < data.entries.length; i++) {
     var previousEntry = renderEntry(data.entries[i]);
-    $entryContainer.append(previousEntry);
+    $entryUl.append(previousEntry);
   }
 });
 
@@ -37,9 +38,13 @@ $newEntryButton.addEventListener('click', function (event) { // swaps view to en
   viewSwap('entry-form');
 });
 
-$entryContainer.addEventListener('click', function (event) {
+$entryUl.addEventListener('click', function (event) { // edit an entry
   if (event.target && event.target.tagName === 'I') {
-    viewSwap('entry-form');
+    for (let i = 0; i < data.entries.length; i++) { // loop through data entries and find matching entry id
+      if (data.entries[i].entryID === parseInt(event.path[3].getAttribute('data-entry-id'))) {
+        data.editing = data.entries[i];
+      }
+    }
   }
 });
 
@@ -64,7 +69,7 @@ function handleSubmit(event) { // handles the submit event on the new entry form
   formData.entryID = data.nextEntryId;
   data.nextEntryId++;
   data.entries.unshift(formData);
-  $entryContainer.prepend(renderEntry(formData)); // add the new image to the top of the container
+  $entryUl.prepend(renderEntry(formData)); // add the new image to the top of the container
   $journalForm.reset();
   $image.setAttribute('src', 'images/placeholder-image-square.jpg'); // reset image to default
 }
@@ -78,11 +83,11 @@ function createDefaultText() { // creates default text if there are no previous 
 
 function renderEntry(entry) { // creates DOM tree for an individual entry
   /**
-   * <ul class="row mb-1-rem">
-   *   <li class="column-half">
+   * <li data-entry-id="" class="row mb-1-rem">
+   *   <div class="column-half">
    *     <img src="" alt="">
-   *   </li>
-   *   <li class="column-half">
+   *   </div
+   *   <div class="column-half">
    *     <div class="row space-between">
    *       <h2 class="entry-title"></h2>
    *       <i class="fa-regular fa-pen-to-square"></i>
@@ -90,22 +95,22 @@ function renderEntry(entry) { // creates DOM tree for an individual entry
    *     <div class="row"
    *       <p class="entry-description">
    *     </div>
-   *   </li>
-   * </ul>
+   *   </div>
+   * </li>
   */
-  var $entry = document.createElement('ul');
-  $entry.classList = 'row mb-1-rem';
-  $entry.setAttribute('data-entry-id', entry.entryID);
+  var $entryLi = document.createElement('li');
+  $entryLi.classList = 'row mb-1-rem';
+  $entryLi.setAttribute('data-entry-id', entry.entryID);
 
-  var $imageLi = document.createElement('li');
-  $imageLi.classList = 'column-half';
+  var $imageDiv = document.createElement('div');
+  $imageDiv.classList = 'column-half';
 
   var $imageTag = document.createElement('img');
   $imageTag.setAttribute('src', entry['photo-url']);
   $imageTag.setAttribute('alt', `${entry.title}-img`);
 
-  var $textLi = document.createElement('li');
-  $textLi.classList = 'column-half';
+  var $textDiv = document.createElement('div');
+  $textDiv.classList = 'column-half';
 
   var $rowTitleDiv = document.createElement('div');
   $rowTitleDiv.classList = 'row space-between align-center';
@@ -126,11 +131,11 @@ function renderEntry(entry) { // creates DOM tree for an individual entry
 
   $rowTitleDiv.append($h2Tag, $editIcon);
   $rowNotesDiv.append($pTag);
-  $imageLi.append($imageTag);
-  $textLi.append($rowTitleDiv, $rowNotesDiv);
-  $entry.append($imageLi, $textLi);
+  $imageDiv.append($imageTag);
+  $textDiv.append($rowTitleDiv, $rowNotesDiv);
+  $entryLi.append($imageDiv, $textDiv);
 
-  return $entry;
+  return $entryLi;
 }
 
 function viewSwap(string) { // swaps to the data-view passed into the function & hides other data-views
