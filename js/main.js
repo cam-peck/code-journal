@@ -2,6 +2,8 @@
 
 var $journalForm = document.querySelector('form');
 var $journalFormTitle = document.querySelector('form h1');
+var $journalFormDeleteRow = document.querySelector('.delete');
+var $journalFormDeleteBtn = document.querySelector('.link-btn');
 var $photoUrlInput = document.querySelector('#photo-url');
 var $image = document.querySelector('img');
 var $entryNav = document.querySelector('.entry-nav');
@@ -38,6 +40,9 @@ window.addEventListener('DOMContentLoaded', function (event) { // loads previous
 
 $entryNav.addEventListener('click', function (event) { // swaps view to entries
   resetForm();
+  if ($journalFormDeleteBtn.className === 'link-btn') {
+    removeDeleteBtn();
+  }
   viewSwap('entries');
 });
 
@@ -48,6 +53,7 @@ $newEntryButton.addEventListener('click', function (event) { // swaps view to en
 
 $entryUl.addEventListener('click', function (event) { // edit an entry
   $journalFormTitle.textContent = 'Edit Entry';
+  renderDeleteBtn();
   assignToEditing(event);
 });
 
@@ -110,6 +116,7 @@ function handleEditSubmit(event) { // handles the submit event for editing an en
   $nodeToReplace.replaceWith(renderEntry(data.editing));
   data.editing = null;
   resetForm();
+  removeDeleteBtn();
 }
 
 function createDefaultText() { // creates default text if there are no previous entries
@@ -117,6 +124,16 @@ function createDefaultText() { // creates default text if there are no previous 
   output.className = 'text-center default-text';
   output.textContent = 'No entries have been recorded... yet!';
   return output;
+}
+
+function renderDeleteBtn() {
+  $journalFormDeleteRow.className = 'row column-full justify-between delete';
+  $journalFormDeleteBtn.className = 'link-btn';
+}
+
+function removeDeleteBtn() {
+  $journalFormDeleteRow.className = 'row column-full justify-end delete';
+  $journalFormDeleteBtn.className = 'link-btn hidden';
 }
 
 function renderEntry(entry) { // creates DOM tree for an individual entry
