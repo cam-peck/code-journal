@@ -106,6 +106,55 @@ button.new-entry {
   order: 1;
 }
 
+.modal {
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgb(0 0 0 / 80%);
+}
+
+.modal-content {
+  background-color: white;
+  margin: 20% auto;
+  padding: 20px;
+  border: 1px solid black;
+  border-radius: 5px;
+  width: 450px;
+  text-align: center;
+}
+
+.close-modal,
+.confirm-modal {
+  border-radius: 5px;
+  padding: 0.75rem;
+  font-size: 1.25rem;
+  font-weight: bold;
+  box-shadow: 0 5px 15px lightgray;
+}
+
+.close-modal {
+  color: black;
+  background-color: lightgray;
+  border: 1px solid lightgray;
+}
+
+.close-modal:hover {
+  color: red;
+}
+
+.confirm-modal {
+  color: white;
+  background-color: red;
+  border: 1px solid red;
+}
+
+.confirm-modal:hover {
+  color: black;
+}
+
 /* Functional CSS Classes */
 
 .purple-bg {
@@ -146,6 +195,10 @@ button.new-entry {
 
 .justify-end {
   justify-content: end;
+}
+
+.justify-center {
+  justify-content: center;
 }
 
 .text-center {

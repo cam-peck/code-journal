@@ -4,6 +4,7 @@ var $journalForm = document.querySelector('form');
 var $journalFormTitle = document.querySelector('form h1');
 var $journalFormDeleteRow = document.querySelector('.delete');
 var $journalFormDeleteBtn = document.querySelector('.link-btn');
+var $deleteModal = document.querySelector('.modal');
 var $photoUrlInput = document.querySelector('#photo-url');
 var $image = document.querySelector('img');
 var $entryNav = document.querySelector('.entry-nav');
@@ -40,7 +41,7 @@ window.addEventListener('DOMContentLoaded', function (event) { // loads previous
 
 $entryNav.addEventListener('click', function (event) { // swaps view to entries
   resetForm();
-  if ($journalFormDeleteBtn.className === 'link-btn') {
+  if ($journalFormDeleteBtn.className !== 'link-btn hidden') {
     removeDeleteBtn();
   }
   viewSwap('entries');
@@ -55,6 +56,10 @@ $entryUl.addEventListener('click', function (event) { // edit an entry
   $journalFormTitle.textContent = 'Edit Entry';
   renderDeleteBtn();
   assignToEditing(event);
+});
+
+$journalFormDeleteBtn.addEventListener('click', function (event) { // pull up model when delete button is clicked
+  $deleteModal.className = 'modal';
 });
 
 // Functions
