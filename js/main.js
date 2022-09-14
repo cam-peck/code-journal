@@ -37,6 +37,7 @@ window.addEventListener('DOMContentLoaded', function (event) { // loads previous
 });
 
 $entryNav.addEventListener('click', function (event) { // swaps view to entries
+  resetForm();
   viewSwap('entries');
 });
 
@@ -72,8 +73,7 @@ function handleNewSubmit(event) { // handles the submit event for a new entry
   data.nextEntryId++;
   data.entries.unshift(formData);
   $entryUl.prepend(renderEntry(formData)); // add the new image to the top of the container
-  $journalForm.reset();
-  $image.setAttribute('src', 'images/placeholder-image-square.jpg'); // reset image to default
+  resetForm();
 }
 
 function assignToEditing(event) { // assigns the clicked entry to the editing property of data
@@ -85,6 +85,11 @@ function assignToEditing(event) { // assigns the clicked entry to the editing pr
       }
     }
   }
+}
+
+function resetForm() {
+  $journalForm.reset();
+  $image.setAttribute('src', 'images/placeholder-image-square.jpg'); // reset image to default
 }
 
 function prefillForm() { // prefills the form with currently selected entry data (found in editing property of data)
@@ -104,6 +109,7 @@ function handleEditSubmit(event) { // handles the submit event for editing an en
   var $nodeToReplace = document.querySelector(`li[data-entry-id="${data.editing.entryID}"]`);
   $nodeToReplace.replaceWith(renderEntry(data.editing));
   data.editing = null;
+  resetForm();
 }
 
 function createDefaultText() { // creates default text if there are no previous entries
