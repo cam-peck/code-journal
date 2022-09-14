@@ -39,13 +39,10 @@ $newEntryButton.addEventListener('click', function (event) { // swaps view to en
 });
 
 $entryUl.addEventListener('click', function (event) { // edit an entry
-  if (event.target && event.target.tagName === 'I') {
-    for (let i = 0; i < data.entries.length; i++) { // loop through data entries and find matching entry id
-      if (data.entries[i].entryID === parseInt(event.path[3].getAttribute('data-entry-id'))) {
-        data.editing = data.entries[i];
-      }
-    }
-  }
+  assignToEditing(event);
+  // console.log('Currently editing: ', data.editing);
+  prefillForm();
+
 });
 
 // Functions
@@ -147,4 +144,22 @@ function viewSwap(string) { // swaps to the data-view passed into the function &
       $dataViews[i].className = 'hidden';
     }
   }
+}
+
+function assignToEditing(event) { // assigns the clicked entry to the editing property of data
+  if (event.target && event.target.tagName === 'I') {
+    for (let i = 0; i < data.entries.length; i++) { // loop through data entries and find matching entry id
+      if (data.entries[i].entryID === parseInt(event.target.closest('li').getAttribute('data-entry-id'))) {
+        data.editing = data.entries[i];
+      }
+    }
+  }
+}
+
+function prefillForm() {
+  $journalForm.elements.title.value = data.editing.title;
+  $journalForm.elements['photo-url'].value = data.editing['photo-url'];
+  $journalForm.elements.notes.value = data.editing.notes;
+  handleImageUrl();
+  viewSwap('entry-form');
 }
