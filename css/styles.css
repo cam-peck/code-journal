@@ -111,6 +111,10 @@ button.new-entry {
   margin: 0;
 }
 
+.mb-half-rem {
+  margin-bottom: 0.5rem;
+}
+
 .mb-1-rem {
   margin-bottom: 1rem;
 }
@@ -141,4 +145,8 @@ button.new-entry {
 
 .align-center {
   align-items: center;
+}
+
+.space-between {
+  justify-content: space-between;
 }

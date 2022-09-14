@@ -5,8 +5,9 @@ var $photoUrlInput = document.querySelector('#photo-url');
 var $image = document.querySelector('img');
 var $entryNav = document.querySelector('.entry-nav');
 var $newEntryButton = document.querySelector('.new-entry');
-var $entryContainer = document.querySelector('.entry-container');
+var $entryUl = document.querySelector('.entry-ul');
 var $defaultText = createDefaultText();
+
 // Event Listeners
 
 $photoUrlInput.addEventListener('input', handleImageUrl); // loads photo when url is added to input field
@@ -21,11 +22,11 @@ $journalForm.addEventListener('submit', function (event) { // passes form data i
 
 window.addEventListener('DOMContentLoaded', function (event) { // loads previous session data (if present) after DOM loads
   if (data.entries.length === 0) { // if entries if empty, display default text
-    $entryContainer.append($defaultText);
+    $entryUl.append($defaultText);
   }
   for (let i = 0; i < data.entries.length; i++) {
     var previousEntry = renderEntry(data.entries[i]);
-    $entryContainer.append(previousEntry);
+    $entryUl.append(previousEntry);
   }
 });
 
@@ -35,6 +36,16 @@ $entryNav.addEventListener('click', function (event) { // swaps view to entries
 
 $newEntryButton.addEventListener('click', function (event) { // swaps view to entry form
   viewSwap('entry-form');
+});
+
+$entryUl.addEventListener('click', function (event) { // edit an entry
+  if (event.target && event.target.tagName === 'I') {
+    for (let i = 0; i < data.entries.length; i++) { // loop through data entries and find matching entry id
+      if (data.entries[i].entryID === parseInt(event.path[3].getAttribute('data-entry-id'))) {
+        data.editing = data.entries[i];
+      }
+    }
+  }
 });
 
 // Functions
@@ -58,7 +69,7 @@ function handleSubmit(event) { // handles the submit event on the new entry form
   formData.entryID = data.nextEntryId;
   data.nextEntryId++;
   data.entries.unshift(formData);
-  $entryContainer.prepend(renderEntry(formData)); // add the new image to the top of the container
+  $entryUl.prepend(renderEntry(formData)); // add the new image to the top of the container
   $journalForm.reset();
   $image.setAttribute('src', 'images/placeholder-image-square.jpg'); // reset image to default
 }
@@ -72,42 +83,59 @@ function createDefaultText() { // creates default text if there are no previous 
 
 function renderEntry(entry) { // creates DOM tree for an individual entry
   /**
-   * <ul class="row mb-1-rem">
-   *   <li class="column-half">
+   * <li data-entry-id="" class="row mb-1-rem">
+   *   <div class="column-half">
    *     <img src="" alt="">
-   *   </li>
-   *   <li class="column-half">
-   *     <h2 class="entry-title"></h2>
-   *     <p class="entry-description">
-   *   </li>
-   * </ul>
+   *   </div
+   *   <div class="column-half">
+   *     <div class="row space-between">
+   *       <h2 class="entry-title"></h2>
+   *       <i class="fa-regular fa-pen-to-square"></i>
+   *     </div>
+   *     <div class="row"
+   *       <p class="entry-description">
+   *     </div>
+   *   </div>
+   * </li>
   */
-  var $entry = document.createElement('ul');
-  $entry.classList = 'row mb-1-rem';
+  var $entryLi = document.createElement('li');
+  $entryLi.classList = 'row mb-1-rem';
+  $entryLi.setAttribute('data-entry-id', entry.entryID);
 
-  var $imageLi = document.createElement('li');
-  $imageLi.classList = 'column-half';
+  var $imageDiv = document.createElement('div');
+  $imageDiv.classList = 'column-half';
 
   var $imageTag = document.createElement('img');
   $imageTag.setAttribute('src', entry['photo-url']);
   $imageTag.setAttribute('alt', `${entry.title}-img`);
 
-  var $textLi = document.createElement('li');
-  $textLi.classList = 'column-half';
+  var $textDiv = document.createElement('div');
+  $textDiv.classList = 'column-half';
+
+  var $rowTitleDiv = document.createElement('div');
+  $rowTitleDiv.classList = 'row space-between align-center';
 
   var $h2Tag = document.createElement('h2');
-  $h2Tag.classList = 'entry-title';
+  $h2Tag.classList = 'entry-title m-0';
   $h2Tag.textContent = entry.title;
+
+  var $editIcon = document.createElement('i');
+  $editIcon.classList = 'fa-solid fa-pen-to-square fa-xl';
+
+  var $rowNotesDiv = document.createElement('div');
+  $rowNotesDiv.classList = 'row';
 
   var $pTag = document.createElement('p');
   $pTag.classList = 'entry-description';
   $pTag.textContent = entry.notes;
 
-  $entry.append($imageLi, $textLi);
-  $imageLi.append($imageTag);
-  $textLi.append($h2Tag, $pTag);
+  $rowTitleDiv.append($h2Tag, $editIcon);
+  $rowNotesDiv.append($pTag);
+  $imageDiv.append($imageTag);
+  $textDiv.append($rowTitleDiv, $rowNotesDiv);
+  $entryLi.append($imageDiv, $textDiv);
 
-  return $entry;
+  return $entryLi;
 }
 
 function viewSwap(string) { // swaps to the data-view passed into the function & hides other data-views
