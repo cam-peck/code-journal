@@ -6,7 +6,7 @@ var $journalFormDeleteRow = document.querySelector('.delete');
 var $journalFormDeleteBtn = document.querySelector('.link-btn');
 var $deleteModal = document.querySelector('.modal');
 var $modalCancel = document.querySelector('.close-modal');
-// var $modalConfirm = document.querySelector('.confirm-modal');
+var $modalConfirm = document.querySelector('.confirm-modal');
 var $photoUrlInput = document.querySelector('#photo-url');
 var $image = document.querySelector('img');
 var $entryNav = document.querySelector('.entry-nav');
@@ -64,10 +64,15 @@ $journalFormDeleteBtn.addEventListener('click', function (event) { // pull up mo
   $deleteModal.className = 'modal';
 });
 
-$modalCancel.addEventListener('click', function (event) {
+$modalCancel.addEventListener('click', function (event) { // exits user from modal interface
   $deleteModal.className = 'modal hidden';
 });
 
+$modalConfirm.addEventListener('click', function (event) { // deletes currently selected entry
+  removeEntry(event);
+  $deleteModal.className = 'modal hidden';
+  viewSwap('entries');
+});
 // Functions
 
 function handleImageUrl(event) { // handles input urls from entry form and renders them
@@ -119,7 +124,6 @@ function prefillForm() { // prefills the form with currently selected entry data
 
 function handleEditSubmit(event) { // handles the submit event for editing an entry
   event.preventDefault();
-
   data.editing.title = $journalForm.elements.title.value;
   data.editing['photo-url'] = $journalForm.elements['photo-url'].value;
   data.editing.notes = $journalForm.elements.notes.value;
@@ -211,6 +215,16 @@ function viewSwap(string) { // swaps to the data-view passed into the function &
       $dataViews[i].className = '';
     } else {
       $dataViews[i].className = 'hidden';
+    }
+  }
+}
+
+function removeEntry(entry) { // removes entry from dom tree and data model
+  var $nodeToDelete = document.querySelector(`li[data-entry-id="${data.editing.entryID}"]`); // remove entry from the dom tree
+  $nodeToDelete.remove();
+  for (let i = 0; i < data.entries.length; i++) {
+    if (data.entries[i].entryID === data.editing.entryID) { // remove entry from the data model
+      data.entries.splice(i, 1);
     }
   }
 }
