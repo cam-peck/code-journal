@@ -37,6 +37,12 @@ $newEntryButton.addEventListener('click', function (event) { // swaps view to en
   viewSwap('entry-form');
 });
 
+$entryContainer.addEventListener('click', function (event) {
+  if (event.target && event.target.tagName === 'I') {
+    viewSwap('entry-form');
+  }
+});
+
 // Functions
 
 function handleImageUrl(event) { // handles input urls from entry form and renders them
