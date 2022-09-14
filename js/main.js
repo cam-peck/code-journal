@@ -1,6 +1,7 @@
 // DOM Queries
 
 var $journalForm = document.querySelector('form');
+var $journalFormTitle = document.querySelector('form h1');
 var $photoUrlInput = document.querySelector('#photo-url');
 var $image = document.querySelector('img');
 var $entryNav = document.querySelector('.entry-nav');
@@ -16,7 +17,12 @@ $journalForm.addEventListener('submit', function (event) { // passes form data i
   if (data.entries.length === 0) {
     $defaultText.remove();
   }
-  handleSubmit(event);
+  if (data.editing) {
+    handleEditSubmit(event);
+  } else {
+    handleNewSubmit(event);
+  }
+
   viewSwap('entries');
 });
 
@@ -35,14 +41,13 @@ $entryNav.addEventListener('click', function (event) { // swaps view to entries
 });
 
 $newEntryButton.addEventListener('click', function (event) { // swaps view to entry form
+  $journalFormTitle.textContent = 'Create Entry';
   viewSwap('entry-form');
 });
 
 $entryUl.addEventListener('click', function (event) { // edit an entry
+  $journalFormTitle.textContent = 'Edit Entry';
   assignToEditing(event);
-  // console.log('Currently editing: ', data.editing);
-  prefillForm();
-
 });
 
 // Functions
@@ -57,7 +62,7 @@ function isImage(url) { // checks if an image ends in common extensions, returns
   return /\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(url);
 }
 
-function handleSubmit(event) { // handles the submit event on the new entry form
+function handleNewSubmit(event) { // handles the submit event for a new entry
   event.preventDefault();
   var formData = {};
   formData.title = $journalForm.elements.title.value;
@@ -69,6 +74,36 @@ function handleSubmit(event) { // handles the submit event on the new entry form
   $entryUl.prepend(renderEntry(formData)); // add the new image to the top of the container
   $journalForm.reset();
   $image.setAttribute('src', 'images/placeholder-image-square.jpg'); // reset image to default
+}
+
+function assignToEditing(event) { // assigns the clicked entry to the editing property of data
+  if (event.target && event.target.tagName === 'I') {
+    for (let i = 0; i < data.entries.length; i++) { // loop through data entries and find matching entry id
+      if (data.entries[i].entryID === parseInt(event.target.closest('li').getAttribute('data-entry-id'))) {
+        data.editing = data.entries[i];
+        prefillForm();
+      }
+    }
+  }
+}
+
+function prefillForm() { // prefills the form with currently selected entry data (found in editing property of data)
+  $journalForm.elements.title.value = data.editing.title;
+  $journalForm.elements['photo-url'].value = data.editing['photo-url'];
+  $journalForm.elements.notes.value = data.editing.notes;
+  handleImageUrl();
+  viewSwap('entry-form');
+}
+
+function handleEditSubmit(event) { // handles the submit event for editing an entry
+  event.preventDefault();
+
+  data.editing.title = $journalForm.elements.title.value;
+  data.editing['photo-url'] = $journalForm.elements['photo-url'].value;
+  data.editing.notes = $journalForm.elements.notes.value;
+  var $nodeToReplace = document.querySelector(`li[data-entry-id="${data.editing.entryID}"]`);
+  $nodeToReplace.replaceWith(renderEntry(data.editing));
+  data.editing = null;
 }
 
 function createDefaultText() { // creates default text if there are no previous entries
@@ -144,22 +179,4 @@ function viewSwap(string) { // swaps to the data-view passed into the function &
       $dataViews[i].className = 'hidden';
     }
   }
-}
-
-function assignToEditing(event) { // assigns the clicked entry to the editing property of data
-  if (event.target && event.target.tagName === 'I') {
-    for (let i = 0; i < data.entries.length; i++) { // loop through data entries and find matching entry id
-      if (data.entries[i].entryID === parseInt(event.target.closest('li').getAttribute('data-entry-id'))) {
-        data.editing = data.entries[i];
-      }
-    }
-  }
-}
-
-function prefillForm() {
-  $journalForm.elements.title.value = data.editing.title;
-  $journalForm.elements['photo-url'].value = data.editing['photo-url'];
-  $journalForm.elements.notes.value = data.editing.notes;
-  handleImageUrl();
-  viewSwap('entry-form');
 }
