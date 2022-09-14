@@ -50,6 +50,7 @@ $entryNav.addEventListener('click', function (event) { // swaps view to entries
 });
 
 $newEntryButton.addEventListener('click', function (event) { // swaps view to entry form
+  resetForm();
   $journalFormTitle.textContent = 'Create Entry';
   viewSwap('entry-form');
 });
@@ -95,7 +96,6 @@ function handleNewSubmit(event) { // handles the submit event for a new entry
   data.nextEntryId++;
   data.entries.unshift(formData);
   $entryUl.prepend(renderEntry(formData)); // add the new image to the top of the container
-  resetForm();
 }
 
 function assignToEditing(event) { // assigns the clicked entry to the editing property of data
@@ -130,7 +130,6 @@ function handleEditSubmit(event) { // handles the submit event for editing an en
   var $nodeToReplace = document.querySelector(`li[data-entry-id="${data.editing.entryID}"]`);
   $nodeToReplace.replaceWith(renderEntry(data.editing));
   data.editing = null;
-  resetForm();
   removeDeleteBtn();
 }
 
@@ -227,4 +226,8 @@ function removeEntry(entry) { // removes entry from dom tree and data model
       data.entries.splice(i, 1);
     }
   }
+  if (data.entries.length === 0) {
+    $entryUl.append($defaultText);
+  }
+  data.editing = null;
 }
