@@ -2,6 +2,11 @@
 
 var $journalForm = document.querySelector('form');
 var $journalFormTitle = document.querySelector('form h1');
+var $journalFormDeleteRow = document.querySelector('.delete');
+var $journalFormDeleteBtn = document.querySelector('.link-btn');
+var $deleteModal = document.querySelector('.modal');
+var $modalCancel = document.querySelector('.close-modal');
+var $modalConfirm = document.querySelector('.confirm-modal');
 var $photoUrlInput = document.querySelector('#photo-url');
 var $image = document.querySelector('img');
 var $entryNav = document.querySelector('.entry-nav');
@@ -37,19 +42,38 @@ window.addEventListener('DOMContentLoaded', function (event) { // loads previous
 });
 
 $entryNav.addEventListener('click', function (event) { // swaps view to entries
+  resetForm();
+  if ($journalFormDeleteBtn.className !== 'link-btn hidden') {
+    removeDeleteBtn();
+  }
   viewSwap('entries');
 });
 
 $newEntryButton.addEventListener('click', function (event) { // swaps view to entry form
+  resetForm();
   $journalFormTitle.textContent = 'Create Entry';
   viewSwap('entry-form');
 });
 
 $entryUl.addEventListener('click', function (event) { // edit an entry
   $journalFormTitle.textContent = 'Edit Entry';
+  renderDeleteBtn();
   assignToEditing(event);
 });
 
+$journalFormDeleteBtn.addEventListener('click', function (event) { // pull up model when delete button is clicked
+  $deleteModal.className = 'modal';
+});
+
+$modalCancel.addEventListener('click', function (event) { // exits user from modal interface
+  $deleteModal.className = 'modal hidden';
+});
+
+$modalConfirm.addEventListener('click', function (event) { // deletes currently selected entry
+  removeEntry(event);
+  $deleteModal.className = 'modal hidden';
+  viewSwap('entries');
+});
 // Functions
 
 function handleImageUrl(event) { // handles input urls from entry form and renders them
@@ -72,8 +96,6 @@ function handleNewSubmit(event) { // handles the submit event for a new entry
   data.nextEntryId++;
   data.entries.unshift(formData);
   $entryUl.prepend(renderEntry(formData)); // add the new image to the top of the container
-  $journalForm.reset();
-  $image.setAttribute('src', 'images/placeholder-image-square.jpg'); // reset image to default
 }
 
 function assignToEditing(event) { // assigns the clicked entry to the editing property of data
@@ -87,6 +109,11 @@ function assignToEditing(event) { // assigns the clicked entry to the editing pr
   }
 }
 
+function resetForm() {
+  $journalForm.reset();
+  $image.setAttribute('src', 'images/placeholder-image-square.jpg'); // reset image to default
+}
+
 function prefillForm() { // prefills the form with currently selected entry data (found in editing property of data)
   $journalForm.elements.title.value = data.editing.title;
   $journalForm.elements['photo-url'].value = data.editing['photo-url'];
@@ -97,13 +124,13 @@ function prefillForm() { // prefills the form with currently selected entry data
 
 function handleEditSubmit(event) { // handles the submit event for editing an entry
   event.preventDefault();
-
   data.editing.title = $journalForm.elements.title.value;
   data.editing['photo-url'] = $journalForm.elements['photo-url'].value;
   data.editing.notes = $journalForm.elements.notes.value;
   var $nodeToReplace = document.querySelector(`li[data-entry-id="${data.editing.entryID}"]`);
   $nodeToReplace.replaceWith(renderEntry(data.editing));
   data.editing = null;
+  removeDeleteBtn();
 }
 
 function createDefaultText() { // creates default text if there are no previous entries
@@ -113,6 +140,16 @@ function createDefaultText() { // creates default text if there are no previous 
   return output;
 }
 
+function renderDeleteBtn() {
+  $journalFormDeleteRow.className = 'row column-full justify-between delete';
+  $journalFormDeleteBtn.className = 'link-btn';
+}
+
+function removeDeleteBtn() {
+  $journalFormDeleteRow.className = 'row column-full justify-end delete';
+  $journalFormDeleteBtn.className = 'link-btn hidden';
+}
+
 function renderEntry(entry) { // creates DOM tree for an individual entry
   /**
    * <li data-entry-id="" class="row mb-1-rem">
@@ -120,7 +157,7 @@ function renderEntry(entry) { // creates DOM tree for an individual entry
    *     <img src="" alt="">
    *   </div
    *   <div class="column-half">
-   *     <div class="row space-between">
+   *     <div class="row align-center">
    *       <h2 class="entry-title"></h2>
    *       <i class="fa-regular fa-pen-to-square"></i>
    *     </div>
@@ -145,10 +182,10 @@ function renderEntry(entry) { // creates DOM tree for an individual entry
   $textDiv.classList = 'column-half';
 
   var $rowTitleDiv = document.createElement('div');
-  $rowTitleDiv.classList = 'row space-between align-center';
+  $rowTitleDiv.classList = 'row space-between align-baseline';
 
   var $h2Tag = document.createElement('h2');
-  $h2Tag.classList = 'entry-title m-0';
+  $h2Tag.classList = 'entry-title m-0 flex-basis-90';
   $h2Tag.textContent = entry.title;
 
   var $editIcon = document.createElement('i');
@@ -179,4 +216,18 @@ function viewSwap(string) { // swaps to the data-view passed into the function &
       $dataViews[i].className = 'hidden';
     }
   }
+}
+
+function removeEntry(entry) { // removes entry from dom tree and data model
+  var $nodeToDelete = document.querySelector(`li[data-entry-id="${data.editing.entryID}"]`); // remove entry from the dom tree
+  $nodeToDelete.remove();
+  for (let i = 0; i < data.entries.length; i++) {
+    if (data.entries[i].entryID === data.editing.entryID) { // remove entry from the data model
+      data.entries.splice(i, 1);
+    }
+  }
+  if (data.entries.length === 0) {
+    $entryUl.append($defaultText);
+  }
+  data.editing = null;
 }
