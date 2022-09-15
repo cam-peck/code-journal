@@ -9,12 +9,23 @@ var $modalCancel = document.querySelector('.close-modal');
 var $modalConfirm = document.querySelector('.confirm-modal');
 var $photoUrlInput = document.querySelector('#photo-url');
 var $image = document.querySelector('img');
+var $searchbar = document.querySelector('.searchbar');
 var $entryNav = document.querySelector('.entry-nav');
 var $newEntryButton = document.querySelector('.new-entry');
 var $entryUl = document.querySelector('.entry-ul');
 var $defaultText = createDefaultText();
 
 // Event Listeners
+
+window.addEventListener('DOMContentLoaded', function (event) { // loads previous session data (if present) after DOM loads
+  if (data.entries.length === 0) { // if entries if empty, display default text
+    $entryUl.append($defaultText);
+  }
+  for (let i = 0; i < data.entries.length; i++) {
+    var previousEntry = renderEntry(data.entries[i]);
+    $entryUl.append(previousEntry);
+  }
+});
 
 $photoUrlInput.addEventListener('input', handleImageUrl); // loads photo when url is added to input field
 
@@ -31,13 +42,26 @@ $journalForm.addEventListener('submit', function (event) { // passes form data i
   viewSwap('entries');
 });
 
-window.addEventListener('DOMContentLoaded', function (event) { // loads previous session data (if present) after DOM loads
-  if (data.entries.length === 0) { // if entries if empty, display default text
-    $entryUl.append($defaultText);
+$searchbar.addEventListener('input', function (event) { // handle search bar input
+  var query = '';
+  var regexEscapes = ['[', ']', '(', ')', '/', '?', '+'];
+  var splitQuery = event.target.value.split('');
+  for (let i = 0; i < splitQuery.length; i++) {
+    if (regexEscapes.includes(splitQuery[i])) {
+      query += '\\' + splitQuery[i];
+    } else { query += splitQuery[i]; }
   }
+  const regex = new RegExp(query);
   for (let i = 0; i < data.entries.length; i++) {
-    var previousEntry = renderEntry(data.entries[i]);
-    $entryUl.append(previousEntry);
+    const notesResult = regex.test(`${data.entries[i].notes}`);
+    const headResult = regex.test(`${data.entries[i].title}`);
+    if (notesResult || headResult) {
+      var $showNode = document.querySelector(`[data-entry-id="${data.entries[i].entryID}"]`);
+      $showNode.classList = 'row mb-1-rem';
+    } else {
+      var $hideNode = document.querySelector(`[data-entry-id="${data.entries[i].entryID}"]`);
+      $hideNode.classList = 'row mb-1-rem hidden';
+    }
   }
 });
 

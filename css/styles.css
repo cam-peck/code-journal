@@ -83,6 +83,21 @@ ul {
   padding-left: 0;
 }
 
+button.search-btn {
+  float: left;
+  flex-basis: 5%;
+  padding: 0.45rem;
+  background: #2196f3;
+  color: white;
+  font-size: 1rem;
+  border: 1px solid grey;
+  border-radius: 3px;
+  border-left: none;
+
+  /* Prevent double borders */
+  cursor: pointer;
+}
+
 button.new-entry {
   border: 1px solid #562b81;
   border-radius: 5px;
@@ -114,6 +129,7 @@ img.entry {
 
 .searchbar {
   flex-grow: 1;
+  border-right: none;
 }
 
 /* Delete Entries Section */
@@ -192,12 +208,24 @@ img.entry {
   margin: 0;
 }
 
+.mr-1-rem {
+  margin-right: 1rem;
+}
+
+.ml-1-rem {
+  margin-left: 1rem;
+}
+
 .mb-half-rem {
   margin-bottom: 0.5rem;
 }
 
 .mb-1-rem {
   margin-bottom: 1rem;
+}
+
+.mb-1-half-rem {
+  margin-bottom: 1.5rem;
 }
 
 .ml-2-rem {
@@ -246,4 +274,8 @@ img.entry {
 
 .space-between {
   justify-content: space-between;
+}
+
+.gap-1-rem {
+  gap: 1rem;
 }

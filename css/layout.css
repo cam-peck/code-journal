@@ -32,3 +32,10 @@
     width: 50%;
   }
 }
+
+@media screen and (max-width: 500px) {
+  .row-sml {
+    display: flex;
+    justify-content: space-between;
+  }
+}
