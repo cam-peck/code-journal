@@ -32,3 +32,9 @@
     width: 50%;
   }
 }
+
+@media screen and (max-width: 360px) {
+  .new-entry {
+    margin-top: 1rem;
+  }
+}
