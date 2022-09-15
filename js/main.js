@@ -154,7 +154,7 @@ function renderEntry(entry) { // creates DOM tree for an individual entry
   /**
    * <li data-entry-id="" class="row mb-1-rem">
    *   <div class="column-half">
-   *     <img src="" alt="">
+   *     <img class="entry" src="" alt="">
    *   </div
    *   <div class="column-half">
    *     <div class="row align-center">
@@ -177,6 +177,7 @@ function renderEntry(entry) { // creates DOM tree for an individual entry
   var $imageTag = document.createElement('img');
   $imageTag.setAttribute('src', entry['photo-url']);
   $imageTag.setAttribute('alt', `${entry.title}-img`);
+  $imageTag.classList = 'entry';
 
   var $textDiv = document.createElement('div');
   $textDiv.classList = 'column-half';
