@@ -47,6 +47,44 @@
               <label class="entry" for="photo-url">Photo URL</label>
               <input class="entry width-100" type="text" name="photo-url" id="photo-url" required/>
             </div>
+            <div class="row">
+              <label class="entry" for="tags">Tags</label>
+            </div>
+            <div class="row">
+              <button class="tag-btn purple-bg text-white" type="button">+ Add Tag</button>
+              <!-- The Modal -->
+              <section class="modal med-overlay">
+
+                <!-- Modal content -->
+                <div class="modal-content">
+                  <div class="row justify-center">
+                    <h2 class="bold"><i class="fa-solid fa-tags"></i>Tags</h2>
+                  </div>
+                  <div class="content">
+                    <p>Press enter or add a comma after each tag</p>
+                    <div class="tag-box">
+                      <ul class="row">
+                        <li class="tag">
+                          <span>html</span>
+                          <i class="fa-regular fa-circle-xmark"></i>
+                        </li>
+                        <li class="tag">
+                          <span>css</span>
+                          <i class="fa-regular fa-circle-xmark"></i>
+                        </li>
+                        <li class="tag-input">
+                          <input type="text">
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="deets">
+                    <p><span>8</span> tags are remaining</p>
+                    <button>Remove All</button>
+                  </div>
+                </div>
+              </section>
+            </div>
           </div>
         </div>
         <div class="row column-full">
@@ -57,10 +95,10 @@
           <button class="submit-btn purple-bg text-white" type="submit">SAVE</button>
           <button type="button" class="link-btn hidden">Delete Entry</button>
           <!-- The Modal -->
-          <section class="modal hidden">
+          <section class="modal del-modal dark-overlay hidden">
 
             <!-- Modal content -->
-            <div class="modal-content">
+            <div class="modal-content text-center">
               <div class="row justify-center mb-1-rem">
                 <h2 class="bold">Are you sure you want to delete this entry?</h2>
               </div>
@@ -80,7 +118,7 @@
       </div>
       <div class="row column-full align-center mb-1-half-rem">
         <input type="text" class="searchbar" placeholder="Search...">
-        <button class="purple-bg text-white new-entry" type="button">NEW</button>
+        <button class="purple-bg text-white new-entry" type="button">+ TAG</button>
       </div>
 
       <ul class="entry-ul"></ul>

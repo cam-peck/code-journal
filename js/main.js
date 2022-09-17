@@ -4,7 +4,7 @@ var $journalForm = document.querySelector('form');
 var $journalFormTitle = document.querySelector('form h1');
 var $journalFormDeleteRow = document.querySelector('.delete');
 var $journalFormDeleteBtn = document.querySelector('.link-btn');
-var $deleteModal = document.querySelector('.modal');
+var $deleteModal = document.querySelector('.del-modal');
 var $modalCancel = document.querySelector('.close-modal');
 var $modalConfirm = document.querySelector('.confirm-modal');
 var $photoUrlInput = document.querySelector('#photo-url');
@@ -67,7 +67,7 @@ $entryUl.addEventListener('click', function (event) { // edit an entry
 });
 
 $journalFormDeleteBtn.addEventListener('click', function (event) { // pull up model when delete button is clicked
-  $deleteModal.className = 'modal';
+  $deleteModal.className = 'modal dark-overlay';
 });
 
 $modalCancel.addEventListener('click', function (event) { // exits user from modal interface
@@ -79,6 +79,7 @@ $modalConfirm.addEventListener('click', function (event) { // deletes currently 
   $deleteModal.className = 'modal hidden';
   viewSwap('entries');
 });
+
 // Functions
 
 function handleImageUrl(event) { // handles input urls from entry form and renders them
