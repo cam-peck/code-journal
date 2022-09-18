@@ -14,6 +14,9 @@ var $entryNav = document.querySelector('.entry-nav');
 var $newEntryButton = document.querySelector('.new-entry');
 var $entryUl = document.querySelector('.entry-ul');
 var $defaultText = createDefaultText();
+// var $tagUl = document.querySelector('.tag-box ul');
+// var $tagInput = document.querySelector('.tag-box input');
+// console.log($tagInput);
 
 // Event Listeners
 

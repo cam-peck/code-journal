@@ -206,9 +206,23 @@ img.entry {
 }
 
 /* Tags */
+.modal-content.tags {
+  padding: 1.25rem 1.5rem;
+}
+
 .tag-box ul {
   padding: 0.5rem;
   border: 1px solid #a6a6a6;
+  border-radius: 5px;
+}
+
+.tag-box ul input {
+  width: 100%;
+}
+
+.tag-input {
+  flex: 1;
+  margin: 0.25rem;
 }
 
 .tag {
@@ -224,8 +238,13 @@ img.entry {
   padding-right: 0.1rem;
 }
 
-.tag-input {
-  flex: 1;
+.details button {
+  border: none;
+  outline: none;
+  color: white;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  background-color: #5372f0;
 }
 
 /* Functional CSS Classes */
@@ -244,6 +263,10 @@ img.entry {
 
 .m-0 {
   margin: 0;
+}
+
+.mt-quarter-rem {
+  margin-top: 0.25rem;
 }
 
 .mr-1-rem {
@@ -276,6 +299,10 @@ img.entry {
 
 .width-100 {
   width: 100%;
+}
+
+.min-width-100 {
+  min-width: 100%;
 }
 
 .flex-basis-90 {
@@ -316,4 +343,8 @@ img.entry {
 
 .gap-1-rem {
   gap: 1rem;
+}
+
+.gap-qt-rem {
+  gap: 0.25rem;
 }
