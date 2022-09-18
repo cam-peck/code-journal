@@ -15,8 +15,7 @@ var $newEntryButton = document.querySelector('.new-entry');
 var $entryUl = document.querySelector('.entry-ul');
 var $defaultText = createDefaultText();
 // var $tagUl = document.querySelector('.tag-box ul');
-// var $tagInput = document.querySelector('.tag-box input');
-// console.log($tagInput);
+var $tagInput = document.querySelector('.tag-box input');
 
 // Event Listeners
 
@@ -82,6 +81,8 @@ $modalConfirm.addEventListener('click', function (event) { // deletes currently 
   $deleteModal.className = 'modal hidden';
   viewSwap('entries');
 });
+
+$tagInput.addEventListener('keydown', addTag);
 
 // Functions
 
@@ -263,4 +264,11 @@ function filterSearchbarResult(event) {
       $hideNode.classList = 'row mb-1-rem hidden';
     }
   }
+}
+
+function addTag(event) {
+  if (event.key === 'Enter') {
+    // console.log(event.target.value);
+  }
+
 }
