@@ -14,8 +14,10 @@ var $entryNav = document.querySelector('.entry-nav');
 var $newEntryButton = document.querySelector('.new-entry');
 var $entryUl = document.querySelector('.entry-ul');
 var $defaultText = createDefaultText();
-// var $tagUl = document.querySelector('.tag-box ul');
+var $tagUl = document.querySelector('.tag-box ul');
 var $tagInput = document.querySelector('.tag-box input');
+
+var tags = [];
 
 // Event Listeners
 
@@ -82,7 +84,14 @@ $modalConfirm.addEventListener('click', function (event) { // deletes currently 
   viewSwap('entries');
 });
 
-$tagInput.addEventListener('keydown', addTag);
+$tagInput.addEventListener('keyup', function (event) {
+  if (event.key === 'Enter') {
+    addTag(event);
+    for (let i = 0; i < tags.length; i++) {
+      $tagUl.appendChild(renderTag(tags[i]));
+    }
+  }
+});
 
 // Functions
 
@@ -266,9 +275,32 @@ function filterSearchbarResult(event) {
   }
 }
 
+function renderTag(tag) {
+  /**
+   * <li class="tag">
+   *  <span>html</span>
+   *  <i class="fa-regular fa-circle-xmark"></i>
+   * </li>
+  */
+  var $liTag = document.createElement('li');
+  $liTag.className = 'tag';
+
+  var $tagSpan = document.createElement('span');
+  $tagSpan.textContent = tag;
+  var $tagIcon = document.createElement('i');
+  $tagIcon.className = 'fa-regular fa-circle-xmark';
+
+  $liTag.append($tagSpan, $tagIcon);
+  return $liTag;
+}
+
 function addTag(event) {
   if (event.key === 'Enter') {
-    // console.log(event.target.value);
+    var tag = event.target.value.replace(/\s | /g, ' '); // remove extra spaces from user input
+    if (tag.length > 1 && !tags.includes(tag)) {
+      tag.split(',').forEach(tag => {
+        tags.push(tag);
+      });
+    }
   }
-
 }
