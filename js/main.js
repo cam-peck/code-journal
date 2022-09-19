@@ -14,6 +14,8 @@ var $entryNav = document.querySelector('.entry-nav');
 var $newEntryButton = document.querySelector('.new-entry');
 var $entryUl = document.querySelector('.entry-ul');
 var $defaultText = createDefaultText();
+var $addTag = document.querySelector('.tag-btn');
+var $tagModal = document.querySelector('.tag-modal');
 var $tagUl = document.querySelector('.tag-box ul');
 var $tagInput = document.querySelector('.tag-box input');
 
@@ -84,11 +86,21 @@ $modalConfirm.addEventListener('click', function (event) { // deletes currently 
   viewSwap('entries');
 });
 
+$addTag.addEventListener('click', function (event) {
+  $tagModal.classList.remove('hidden');
+  if (data.editing.tags.length !== 0) {
+    for (let i = 0; i < data.editing.tags.length; i++) {
+      var previousTag = renderTag(data.editing.tags[i]);
+      $tagUl.prepend(previousTag);
+    }
+  }
+});
+
 $tagInput.addEventListener('keyup', function (event) {
   if (event.key === 'Enter') {
     addTag(event);
     for (let i = 0; i < tags.length; i++) {
-      $tagUl.appendChild(renderTag(tags[i]));
+      $tagUl.prepend(renderTag(tags[i]));
     }
   }
 });
@@ -111,6 +123,7 @@ function handleNewSubmit(event) { // handles the submit event for a new entry
   formData.title = $journalForm.elements.title.value;
   formData['photo-url'] = $journalForm.elements['photo-url'].value;
   formData.notes = $journalForm.elements.notes.value;
+  formData.tags = tags;
   formData.entryID = data.nextEntryId;
   data.nextEntryId++;
   data.entries.unshift(formData);
