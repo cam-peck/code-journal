@@ -19,8 +19,6 @@ var $tagModal = document.querySelector('.tag-modal');
 var $tagUl = document.querySelector('.tag-box ul');
 var $tagInput = document.querySelector('.tag-box input');
 
-var tags = [];
-
 // Event Listeners
 
 window.addEventListener('DOMContentLoaded', function (event) { // loads previous session data (if present) after DOM loads
@@ -53,6 +51,7 @@ $searchbar.addEventListener('input', function (event) { // handle search bar inp
 });
 
 $entryNav.addEventListener('click', function (event) { // swaps view to entries
+  data.editing = null;
   resetForm();
   if ($journalFormDeleteBtn.className !== 'link-btn hidden') {
     removeDeleteBtn();
@@ -86,9 +85,9 @@ $modalConfirm.addEventListener('click', function (event) { // deletes currently 
   viewSwap('entries');
 });
 
-$addTag.addEventListener('click', function (event) {
+$addTag.addEventListener('click', function (event) { // opens the tag create / edit modal
   $tagModal.classList.remove('hidden');
-  if (data.editing.tags.length !== 0) {
+  if (data.editing !== null) { // load previous tabs into the modal if present
     for (let i = 0; i < data.editing.tags.length; i++) {
       var previousTag = renderTag(data.editing.tags[i]);
       $tagUl.prepend(previousTag);
@@ -96,13 +95,15 @@ $addTag.addEventListener('click', function (event) {
   }
 });
 
-$tagInput.addEventListener('keyup', function (event) {
+$tagInput.addEventListener('keyup', function (event) { // add new tag to html
   if (event.key === 'Enter') {
     addTag(event);
-    for (let i = 0; i < tags.length; i++) {
-      $tagUl.prepend(renderTag(tags[i]));
-    }
-  }
+    if (data.editing !== null) {
+      $tagUl.prepend(renderTag(data.editing.tags[data.editing.tags.length - 1])); // add newest tag to display
+    } else {
+      $tagUl.prepend(renderTag(data.newTags[data.newTags.length - 1]));
+    } // fix tags always rendering even when duplicates (even though they're not in data)
+  } // fix only most recent tag being rendered when multiple tags are entered and seperated by comma
 });
 
 // Functions
@@ -123,11 +124,12 @@ function handleNewSubmit(event) { // handles the submit event for a new entry
   formData.title = $journalForm.elements.title.value;
   formData['photo-url'] = $journalForm.elements['photo-url'].value;
   formData.notes = $journalForm.elements.notes.value;
-  formData.tags = tags;
+  formData.tags = data.newTags;
   formData.entryID = data.nextEntryId;
   data.nextEntryId++;
   data.entries.unshift(formData);
   $entryUl.prepend(renderEntry(formData)); // add the new image to the top of the container
+  data.newTags = [];
 }
 
 function assignToEditing(event) { // assigns the clicked entry to the editing property of data
@@ -288,7 +290,7 @@ function filterSearchbarResult(event) {
   }
 }
 
-function renderTag(tag) {
+function renderTag(tagText) { // returns a tag with appropriate text
   /**
    * <li class="tag">
    *  <span>html</span>
@@ -299,7 +301,7 @@ function renderTag(tag) {
   $liTag.className = 'tag';
 
   var $tagSpan = document.createElement('span');
-  $tagSpan.textContent = tag;
+  $tagSpan.textContent = tagText;
   var $tagIcon = document.createElement('i');
   $tagIcon.className = 'fa-regular fa-circle-xmark';
 
@@ -307,13 +309,24 @@ function renderTag(tag) {
   return $liTag;
 }
 
-function addTag(event) {
+function addTag(event) { // stores the new tag on the entries object for new entries, on editing for editing entries
   if (event.key === 'Enter') {
-    var tag = event.target.value.replace(/\s | /g, ' '); // remove extra spaces from user input
-    if (tag.length > 1 && !tags.includes(tag)) {
-      tag.split(',').forEach(tag => {
-        tags.push(tag);
-      });
+    var tag = event.target.value.replace(/\s | /g, ' ');
+    if (data.editing === null) { // if new entry, add tag to tags array on entries object
+      if (tag.length > 1 && data.newTags === undefined) {
+        data.newTags = [];
+      }
+      if (tag.length > 1 && !data.newTags.includes(tag)) { // need a list of tags somewhere to check
+        tag.split(',').forEach(tag => {
+          data.newTags.push(tag);
+        });
+      }
+    } else { // if editing, add tag to tags array on editing object
+      if (tag.length > 1 && !data.editing.tags.includes(tag)) {
+        tag.split(',').forEach(tag => {
+          data.editing.tags.push(tag);
+        });
+      }
     }
   }
 }
