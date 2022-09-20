@@ -20,6 +20,7 @@ var $addTag = document.querySelector('.tag-btn');
 var $tagModal = document.querySelector('.tag-modal');
 var $tagUl = document.querySelector('.tag-box ul');
 var $tagInput = document.querySelector('.tag-box input');
+var $closeTags = document.querySelector('.close-tags');
 var $tagBox = document.querySelector('.tag-box');
 
 // Event Listeners
@@ -255,12 +256,11 @@ function filterSearchbarResult(event) {
 
 $addTag.addEventListener('click', function (event) { // opens the tag create / edit modal
   $tagModal.classList.remove('hidden');
-  if (data.editing !== null) { // load previous tabs into the modal if editing
-    for (let i = 0; i < data.editing.tags.length; i++) {
-      var previousTag = renderTag(data.editing.tags[i]);
-      $tagUl.prepend(previousTag);
-    }
-  }
+  prefillTags();
+});
+
+$closeTags.addEventListener('click', function (event) { // closes the modal
+  $tagModal.classList.add('hidden');
 });
 
 $tagInput.addEventListener('keyup', function (event) { // add new tag to html
@@ -331,6 +331,18 @@ function addTag(event) { // stores the new tag on the entries object for new ent
     }
   }
   $tagInput.value = '';
+}
+
+function prefillTags(event) {
+  $tagUl.textContent = '';
+  $tagUl.appendChild($tagInput);
+  $tagInput.className = 'tag-input';
+  if (data.editing !== null) { // load previous tabs into the modal if editing
+    for (let i = 0; i < data.editing.tags.length; i++) {
+      var previousTag = renderTag(data.editing.tags[i]);
+      $tagUl.prepend(previousTag);
+    }
+  }
 }
 
 // Adjust View //

@@ -294,6 +294,10 @@ img.entry {
   margin-left: 2rem;
 }
 
+.p-0 {
+  padding: 0;
+}
+
 .ptb-half-rem {
   padding: 0.75rem 0;
 }
@@ -328,6 +332,10 @@ img.entry {
 
 .text-center {
   text-align: center;
+}
+
+.text-end {
+  text-align: end;
 }
 
 .align-center {
