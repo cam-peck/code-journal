@@ -235,10 +235,6 @@ img.entry {
   background: #f2f2f2;
 }
 
-.tag span {
-  padding-right: 0.1rem;
-}
-
 .details button {
   border: none;
   outline: none;
@@ -264,6 +260,10 @@ img.entry {
 
 .m-0 {
   margin: 0;
+}
+
+.m-quarter-rem {
+  margin: 0.25rem;
 }
 
 .mt-quarter-rem {
@@ -296,6 +296,10 @@ img.entry {
 
 .p-0 {
   padding: 0;
+}
+
+.pr-quarter-rem {
+  padding-right: 0.25rem;
 }
 
 .ptb-half-rem {

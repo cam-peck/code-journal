@@ -50,9 +50,10 @@
             <div class="row">
               <label class="entry" for="tags">Tags</label>
             </div>
-            <div class="row">
-              <button class="tag-btn purple-bg text-white" type="button">+ Add Tag</button>
-
+            <div class="row mb-1-rem">
+              <ul class="tags m-0 row align-center">
+                <li><button class="tag-btn purple-bg text-white m-quarter-rem" type="button">+ Edit Tags</button></li>
+              </ul>
             </div>
           </div>
         </div>
@@ -104,8 +105,8 @@
             </ul>
           </div>
           <div class="details row space-between align-center">
-            <p><span>8</span> tags are remaining</p>
-            <button type="button">Remove All</button>
+            <p><span class="tags-remaining bold">8</span> tags remaining</p>
+            <button class="delete-all-tags" type="button">Remove All</button>
           </div>
         </div>
       </section>
@@ -117,7 +118,7 @@
       </div>
       <div class="row column-full align-center mb-1-half-rem">
         <input type="text" class="searchbar" placeholder="Search...">
-        <button class="purple-bg text-white new-entry" type="button">+ TAG</button>
+        <button class="purple-bg text-white new-entry" type="button">Add Entry</button>
       </div>
 
       <ul class="entry-ul"></ul>

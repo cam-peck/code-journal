@@ -22,8 +22,11 @@ var $tagUl = document.querySelector('.tag-box ul');
 var $tagInput = document.querySelector('.tag-box input');
 var $closeTags = document.querySelector('.close-tags');
 var $tagBox = document.querySelector('.tag-box');
+var $tagsRemaining = document.querySelector('.tags-remaining');
+var $deleteAllTags = document.querySelector('.delete-all-tags');
+var $formTagUl = document.querySelector('.tags');
 
-// Event Listeners
+// Window Listener //
 
 window.addEventListener('DOMContentLoaded', function (event) { // loads previous session data (if present) after DOM loads
   if (data.entries.length === 0) { // if entries if empty, display default text
@@ -35,6 +38,23 @@ window.addEventListener('DOMContentLoaded', function (event) { // loads previous
   }
 });
 
+// Entries Page //
+
+$newEntryButton.addEventListener('click', function (event) { // swaps view to entry form
+  resetForm();
+  displayTagsOnForm();
+  data.newTags = [];
+  $journalFormTitle.textContent = 'Create Entry';
+  viewSwap('entry-form');
+});
+
+$entryUl.addEventListener('click', function (event) { // edit an entry
+  $journalFormTitle.textContent = 'Edit Entry';
+  renderDeleteBtn();
+  assignToEditing(event);
+  displayTagsOnForm();
+});
+
 $entryNav.addEventListener('click', function (event) { // swaps view to entries
   data.editing = null;
   resetForm();
@@ -43,44 +63,6 @@ $entryNav.addEventListener('click', function (event) { // swaps view to entries
   }
   viewSwap('entries');
 });
-
-$newEntryButton.addEventListener('click', function (event) { // swaps view to entry form
-  resetForm();
-  data.newTags = [];
-  $journalFormTitle.textContent = 'Create Entry';
-  viewSwap('entry-form');
-});
-
-$journalFormDeleteBtn.addEventListener('click', function (event) { // pull up model when delete button is clicked
-  $deleteModal.className = 'modal dark-overlay';
-});
-
-$modalCancel.addEventListener('click', function (event) { // exits user from modal interface
-  $deleteModal.className = 'modal hidden';
-});
-
-$modalConfirm.addEventListener('click', function (event) { // deletes currently selected entry
-  removeEntry(event);
-  $deleteModal.className = 'modal hidden';
-  viewSwap('entries');
-});
-
-// Functions
-
-function resetForm() {
-  $journalForm.reset();
-  $image.setAttribute('src', 'images/placeholder-image-square.jpg'); // reset image to default
-}
-
-function prefillForm() { // prefills the form with currently selected entry data (found in editing property of data)
-  $journalForm.elements.title.value = data.editing.title;
-  $journalForm.elements['photo-url'].value = data.editing['photo-url'];
-  $journalForm.elements.notes.value = data.editing.notes;
-  handleImageUrl();
-  viewSwap('entry-form');
-}
-
-// Entries Page //
 
 function renderEntry(entry) { // creates DOM tree for an individual entry
   /**
@@ -183,11 +165,32 @@ function handleNewSubmit(event) { // handles the submit event for a new entry
 
 // Journal Form -- EDIT ENTRY //
 
-$entryUl.addEventListener('click', function (event) { // edit an entry
-  $journalFormTitle.textContent = 'Edit Entry';
-  renderDeleteBtn();
-  assignToEditing(event);
+$journalFormDeleteBtn.addEventListener('click', function (event) { // pull up model when delete button is clicked
+  $deleteModal.className = 'modal dark-overlay';
 });
+
+$modalCancel.addEventListener('click', function (event) { // exits user from modal interface
+  $deleteModal.className = 'modal hidden';
+});
+
+$modalConfirm.addEventListener('click', function (event) { // deletes currently selected entry
+  removeEntry(event);
+  $deleteModal.className = 'modal hidden';
+  viewSwap('entries');
+});
+
+function resetForm() {
+  $journalForm.reset();
+  $image.setAttribute('src', 'images/placeholder-image-square.jpg'); // reset image to default
+}
+
+function prefillForm() { // prefills the form with currently selected entry data (found in editing property of data)
+  $journalForm.elements.title.value = data.editing.title;
+  $journalForm.elements['photo-url'].value = data.editing['photo-url'];
+  $journalForm.elements.notes.value = data.editing.notes;
+  handleImageUrl();
+  viewSwap('entry-form');
+}
 
 function assignToEditing(event) { // assigns the clicked entry to the editing property of data
   if (event.target && event.target.tagName === 'I') {
@@ -258,10 +261,12 @@ function filterSearchbarResult(event) {
 $addTag.addEventListener('click', function (event) { // opens the tag create / edit modal
   $tagModal.classList.remove('hidden');
   prefillTags();
+  updateTagCount();
 });
 
 $closeTags.addEventListener('click', function (event) { // closes the modal
   $tagModal.classList.add('hidden');
+  displayTagsOnForm();
 });
 
 $tagInput.addEventListener('keyup', function (event) { // add new tag to html
@@ -271,25 +276,16 @@ $tagInput.addEventListener('keyup', function (event) { // add new tag to html
 });
 
 $tagBox.addEventListener('click', function (event) {
-  if (event.target.className === 'fa-regular fa-circle-xmark') {
-    var $tagToDelete = event.target.closest('li');
-    var $tagText = $tagToDelete.textContent;
-    if (data.editing !== null) {
-      for (let i = 0; i < data.editing.tags.length; i++) {
-        if ($tagText === data.editing.tags[i]) {
-          data.editing.tags.splice(i, 1);
-          $tagToDelete.remove();
-        }
-      }
-    } else {
-      for (let i = 0; i < data.newTags.length; i++) {
-        if ($tagText === data.newTags[i]) {
-          data.newTags.splice(i, 1);
-          $tagToDelete.remove();
-        }
-      }
-    }
-  }
+  deleteTag(event);
+});
+
+$formTagUl.addEventListener('click', function (event) {
+  deleteTag(event);
+});
+
+$deleteAllTags.addEventListener('click', function (event) {
+  deleteAllTags();
+  updateTagCount();
 });
 
 function renderTag(tagText) { // returns a tag with appropriate text
@@ -304,6 +300,7 @@ function renderTag(tagText) { // returns a tag with appropriate text
 
   var $tagSpan = document.createElement('span');
   $tagSpan.textContent = tagText;
+  $tagSpan.className = 'pr-quarter-rem';
   var $tagIcon = document.createElement('i');
   $tagIcon.className = 'fa-regular fa-circle-xmark';
 
@@ -320,21 +317,65 @@ function addTag(event) { // stores the new tag on the entries object for new ent
     if (tag.length > 1 && !data.newTags.includes(tag)) {
       tag.split(',').forEach(tag => {
         data.newTags.push(tag);
-        $tagUl.prepend(renderTag(tag));
+        updateTagCount();
+        if (checkTagLimit()) {
+          $tagUl.prepend(renderTag(tag));
+        } else {
+          data.newTags.pop(tag);
+        }
       });
     }
   } else { // if editing, add tag to tags array on editing object
     if (tag.length > 1 && !data.editing.tags.includes(tag)) {
       tag.split(',').forEach(tag => {
         data.editing.tags.push(tag);
-        $tagUl.prepend(renderTag(tag));
+        updateTagCount();
+        if (checkTagLimit()) {
+          $tagUl.prepend(renderTag(tag));
+        } else {
+          data.editing.tags.pop(tag);
+        }
       });
     }
   }
   $tagInput.value = '';
 }
 
-function prefillTags(event) {
+function deleteTag(event) {
+  if (event.target.className === 'fa-regular fa-circle-xmark') {
+    var $tagToDelete = event.target.closest('li');
+    var $tagText = $tagToDelete.textContent;
+    if (data.editing !== null) {
+      for (let i = 0; i < data.editing.tags.length; i++) {
+        if ($tagText === data.editing.tags[i]) {
+          data.editing.tags.splice(i, 1);
+          $tagToDelete.remove();
+          updateTagCount();
+        }
+      }
+    } else {
+      for (let i = 0; i < data.newTags.length; i++) {
+        if ($tagText === data.newTags[i]) {
+          data.newTags.splice(i, 1);
+          $tagToDelete.remove();
+          updateTagCount();
+        }
+      }
+    }
+  }
+}
+
+function deleteAllTags(event) {
+  if (data.editing !== null) {
+    data.editing.tags = [];
+    prefillTags();
+  } else {
+    data.newTags = [];
+    prefillTags();
+  }
+}
+
+function prefillTags(event) { // updates the tags ul with the most recent tags
   $tagUl.textContent = '';
   $tagUl.appendChild($tagInput);
   $tagInput.className = 'tag-input';
@@ -349,6 +390,35 @@ function prefillTags(event) {
       $tagUl.prepend(previousNewTag);
     }
   }
+}
+
+function displayTagsOnForm() {
+  $formTagUl.textContent = '';
+  $formTagUl.appendChild($addTag);
+  if (data.editing !== null) {
+    data.editing.tags.forEach(tag => {
+      $formTagUl.prepend(renderTag(tag));
+    });
+  } else {
+    data.newTags.forEach(tag => {
+      $formTagUl.prepend(renderTag(tag));
+    });
+  }
+}
+
+function updateTagCount() {
+  if (data.editing === null) {
+    $tagsRemaining.textContent = 8 - data.newTags.length;
+  } else {
+    $tagsRemaining.textContent = 8 - data.editing.tags.length;
+  }
+}
+
+function checkTagLimit() {
+  if (parseInt($tagsRemaining.textContent) < 0) {
+    $tagsRemaining.textContent = 0;
+    return false;
+  } else return true;
 }
 
 // Adjust View //
