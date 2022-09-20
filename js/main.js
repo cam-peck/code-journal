@@ -1,3 +1,6 @@
+// Variables //
+var $defaultText = createDefaultText();
+
 // DOM Queries
 
 var $journalForm = document.querySelector('form');
@@ -13,7 +16,6 @@ var $searchbar = document.querySelector('.searchbar');
 var $entryNav = document.querySelector('.entry-nav');
 var $newEntryButton = document.querySelector('.new-entry');
 var $entryUl = document.querySelector('.entry-ul');
-var $defaultText = createDefaultText();
 var $addTag = document.querySelector('.tag-btn');
 var $tagModal = document.querySelector('.tag-modal');
 var $tagUl = document.querySelector('.tag-box ul');
@@ -31,25 +33,6 @@ window.addEventListener('DOMContentLoaded', function (event) { // loads previous
   }
 });
 
-$photoUrlInput.addEventListener('input', handleImageUrl); // loads photo when url is added to input field
-
-$journalForm.addEventListener('submit', function (event) { // passes form data into storage and swaps the view to entries
-  if (data.entries.length === 0) {
-    $defaultText.remove();
-  }
-  if (data.editing) {
-    handleEditSubmit(event);
-  } else {
-    handleNewSubmit(event);
-  }
-
-  viewSwap('entries');
-});
-
-$searchbar.addEventListener('input', function (event) { // handle search bar input
-  filterSearchbarResult(event);
-});
-
 $entryNav.addEventListener('click', function (event) { // swaps view to entries
   data.editing = null;
   resetForm();
@@ -63,12 +46,6 @@ $newEntryButton.addEventListener('click', function (event) { // swaps view to en
   resetForm();
   $journalFormTitle.textContent = 'Create Entry';
   viewSwap('entry-form');
-});
-
-$entryUl.addEventListener('click', function (event) { // edit an entry
-  $journalFormTitle.textContent = 'Edit Entry';
-  renderDeleteBtn();
-  assignToEditing(event);
 });
 
 $journalFormDeleteBtn.addEventListener('click', function (event) { // pull up model when delete button is clicked
@@ -85,63 +62,7 @@ $modalConfirm.addEventListener('click', function (event) { // deletes currently 
   viewSwap('entries');
 });
 
-$addTag.addEventListener('click', function (event) { // opens the tag create / edit modal
-  $tagModal.classList.remove('hidden');
-  if (data.editing !== null) { // load previous tabs into the modal if present
-    for (let i = 0; i < data.editing.tags.length; i++) {
-      var previousTag = renderTag(data.editing.tags[i]);
-      $tagUl.prepend(previousTag);
-    }
-  }
-});
-
-$tagInput.addEventListener('keyup', function (event) { // add new tag to html
-  if (event.key === 'Enter') {
-    addTag(event);
-    if (data.editing !== null) {
-      $tagUl.prepend(renderTag(data.editing.tags[data.editing.tags.length - 1])); // add newest tag to display
-    } else {
-      $tagUl.prepend(renderTag(data.newTags[data.newTags.length - 1]));
-    } // fix tags always rendering even when duplicates (even though they're not in data)
-  } // fix only most recent tag being rendered when multiple tags are entered and seperated by comma
-});
-
 // Functions
-
-function handleImageUrl(event) { // handles input urls from entry form and renders them
-  if (isImage($photoUrlInput.value)) {
-    $image.setAttribute('src', $photoUrlInput.value);
-  }
-}
-
-function isImage(url) { // checks if an image ends in common extensions, returns T / F
-  return /\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(url);
-}
-
-function handleNewSubmit(event) { // handles the submit event for a new entry
-  event.preventDefault();
-  var formData = {};
-  formData.title = $journalForm.elements.title.value;
-  formData['photo-url'] = $journalForm.elements['photo-url'].value;
-  formData.notes = $journalForm.elements.notes.value;
-  formData.tags = data.newTags;
-  formData.entryID = data.nextEntryId;
-  data.nextEntryId++;
-  data.entries.unshift(formData);
-  $entryUl.prepend(renderEntry(formData)); // add the new image to the top of the container
-  data.newTags = [];
-}
-
-function assignToEditing(event) { // assigns the clicked entry to the editing property of data
-  if (event.target && event.target.tagName === 'I') {
-    for (let i = 0; i < data.entries.length; i++) { // loop through data entries and find matching entry id
-      if (data.entries[i].entryID === parseInt(event.target.closest('li').getAttribute('data-entry-id'))) {
-        data.editing = data.entries[i];
-        prefillForm();
-      }
-    }
-  }
-}
 
 function resetForm() {
   $journalForm.reset();
@@ -156,33 +77,7 @@ function prefillForm() { // prefills the form with currently selected entry data
   viewSwap('entry-form');
 }
 
-function handleEditSubmit(event) { // handles the submit event for editing an entry
-  event.preventDefault();
-  data.editing.title = $journalForm.elements.title.value;
-  data.editing['photo-url'] = $journalForm.elements['photo-url'].value;
-  data.editing.notes = $journalForm.elements.notes.value;
-  var $nodeToReplace = document.querySelector(`li[data-entry-id="${data.editing.entryID}"]`);
-  $nodeToReplace.replaceWith(renderEntry(data.editing));
-  data.editing = null;
-  removeDeleteBtn();
-}
-
-function createDefaultText() { // creates default text if there are no previous entries
-  var output = document.createElement('p');
-  output.className = 'text-center default-text';
-  output.textContent = 'No entries have been recorded... yet!';
-  return output;
-}
-
-function renderDeleteBtn() {
-  $journalFormDeleteRow.className = 'row column-full justify-between delete';
-  $journalFormDeleteBtn.className = 'link-btn';
-}
-
-function removeDeleteBtn() {
-  $journalFormDeleteRow.className = 'row column-full justify-end delete';
-  $journalFormDeleteBtn.className = 'link-btn hidden';
-}
+// Entries Page //
 
 function renderEntry(entry) { // creates DOM tree for an individual entry
   /**
@@ -242,15 +137,75 @@ function renderEntry(entry) { // creates DOM tree for an individual entry
   return $entryLi;
 }
 
-function viewSwap(string) { // swaps to the data-view passed into the function & hides other data-views
-  var $dataViews = document.querySelectorAll('[data-view]');
-  for (let i = 0; i < $dataViews.length; i++) {
-    if ($dataViews[i].getAttribute('data-view') === string) {
-      $dataViews[i].className = '';
-    } else {
-      $dataViews[i].className = 'hidden';
+// Journal Form -- NEW ENTRY //
+
+$photoUrlInput.addEventListener('input', handleImageUrl); // loads photo when url is added to input field
+
+function handleImageUrl(event) { // handles input urls from entry form and renders them
+  if (isImage($photoUrlInput.value)) {
+    $image.setAttribute('src', $photoUrlInput.value);
+  }
+}
+
+function isImage(url) { // checks if an image ends in common extensions, returns T / F
+  return /\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(url);
+}
+
+$journalForm.addEventListener('submit', function (event) { // passes form data into storage and swaps the view to entries
+  if (data.entries.length === 0) {
+    $defaultText.remove();
+  }
+  if (data.editing) {
+    handleEditSubmit(event);
+  } else {
+    handleNewSubmit(event);
+  }
+
+  viewSwap('entries');
+});
+
+function handleNewSubmit(event) { // handles the submit event for a new entry
+  event.preventDefault();
+  var formData = {};
+  formData.title = $journalForm.elements.title.value;
+  formData['photo-url'] = $journalForm.elements['photo-url'].value;
+  formData.notes = $journalForm.elements.notes.value;
+  formData.tags = data.newTags;
+  formData.entryID = data.nextEntryId;
+  data.nextEntryId++;
+  data.entries.unshift(formData);
+  $entryUl.prepend(renderEntry(formData)); // add the new image to the top of the container
+  data.newTags = [];
+}
+
+// Journal Form -- EDIT ENTRY //
+
+$entryUl.addEventListener('click', function (event) { // edit an entry
+  $journalFormTitle.textContent = 'Edit Entry';
+  renderDeleteBtn();
+  assignToEditing(event);
+});
+
+function assignToEditing(event) { // assigns the clicked entry to the editing property of data
+  if (event.target && event.target.tagName === 'I') {
+    for (let i = 0; i < data.entries.length; i++) { // loop through data entries and find matching entry id
+      if (data.entries[i].entryID === parseInt(event.target.closest('li').getAttribute('data-entry-id'))) {
+        data.editing = data.entries[i];
+        prefillForm();
+      }
     }
   }
+}
+
+function handleEditSubmit(event) { // handles the submit event for editing an entry
+  event.preventDefault();
+  data.editing.title = $journalForm.elements.title.value;
+  data.editing['photo-url'] = $journalForm.elements['photo-url'].value;
+  data.editing.notes = $journalForm.elements.notes.value;
+  var $nodeToReplace = document.querySelector(`li[data-entry-id="${data.editing.entryID}"]`);
+  $nodeToReplace.replaceWith(renderEntry(data.editing));
+  data.editing = null;
+  removeDeleteBtn();
 }
 
 function removeEntry(entry) { // removes entry from dom tree and data model
@@ -266,6 +221,12 @@ function removeEntry(entry) { // removes entry from dom tree and data model
   }
   data.editing = null;
 }
+
+// Search Bar //
+
+$searchbar.addEventListener('input', function (event) { // handle search bar input
+  filterSearchbarResult(event);
+});
 
 function filterSearchbarResult(event) {
   var query = '';
@@ -289,6 +250,23 @@ function filterSearchbarResult(event) {
     }
   }
 }
+// Tags //
+
+$addTag.addEventListener('click', function (event) { // opens the tag create / edit modal
+  $tagModal.classList.remove('hidden');
+  if (data.editing !== null) { // load previous tabs into the modal if editing
+    for (let i = 0; i < data.editing.tags.length; i++) {
+      var previousTag = renderTag(data.editing.tags[i]);
+      $tagUl.prepend(previousTag);
+    }
+  }
+});
+
+$tagInput.addEventListener('keyup', function (event) { // add new tag to html
+  if (event.key === 'Enter') {
+    addTag(event);
+  }
+});
 
 function renderTag(tagText) { // returns a tag with appropriate text
   /**
@@ -310,23 +288,53 @@ function renderTag(tagText) { // returns a tag with appropriate text
 }
 
 function addTag(event) { // stores the new tag on the entries object for new entries, on editing for editing entries
-  if (event.key === 'Enter') {
-    var tag = event.target.value.replace(/\s | /g, ' ');
-    if (data.editing === null) { // if new entry, add tag to tags array on entries object
-      if (tag.length > 1 && data.newTags === undefined) {
-        data.newTags = [];
-      }
-      if (tag.length > 1 && !data.newTags.includes(tag)) { // need a list of tags somewhere to check
-        tag.split(',').forEach(tag => {
-          data.newTags.push(tag);
-        });
-      }
-    } else { // if editing, add tag to tags array on editing object
-      if (tag.length > 1 && !data.editing.tags.includes(tag)) {
-        tag.split(',').forEach(tag => {
-          data.editing.tags.push(tag);
-        });
-      }
+  var tag = event.target.value.replace(/\s | /g, ' ');
+  if (data.editing === null) { // if new entry, add tag to tags array on entries object
+    if (tag.length > 1 && data.newTags === undefined) {
+      data.newTags = [];
+    }
+    if (tag.length > 1 && !data.newTags.includes(tag)) {
+      tag.split(',').forEach(tag => {
+        data.newTags.push(tag);
+        $tagUl.prepend(renderTag(tag));
+      });
+    }
+  } else { // if editing, add tag to tags array on editing object
+    if (tag.length > 1 && !data.editing.tags.includes(tag)) {
+      tag.split(',').forEach(tag => {
+        data.editing.tags.push(tag);
+        $tagUl.prepend(renderTag(tag));
+      });
+    }
+  }
+}
+
+// Adjust View //
+
+function createDefaultText() { // creates default text if there are no previous entries
+  var output = document.createElement('p');
+  output.className = 'text-center default-text';
+  output.textContent = 'No entries have been recorded... yet!';
+  return output;
+}
+
+function renderDeleteBtn() {
+  $journalFormDeleteRow.className = 'row column-full justify-between delete';
+  $journalFormDeleteBtn.className = 'link-btn';
+}
+
+function removeDeleteBtn() {
+  $journalFormDeleteRow.className = 'row column-full justify-end delete';
+  $journalFormDeleteBtn.className = 'link-btn hidden';
+}
+
+function viewSwap(string) { // swaps to the data-view passed into the function & hides other data-views
+  var $dataViews = document.querySelectorAll('[data-view]');
+  for (let i = 0; i < $dataViews.length; i++) {
+    if ($dataViews[i].getAttribute('data-view') === string) {
+      $dataViews[i].className = '';
+    } else {
+      $dataViews[i].className = 'hidden';
     }
   }
 }
