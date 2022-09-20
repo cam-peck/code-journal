@@ -46,6 +46,7 @@ $entryNav.addEventListener('click', function (event) { // swaps view to entries
 
 $newEntryButton.addEventListener('click', function (event) { // swaps view to entry form
   resetForm();
+  data.newTags = [];
   $journalFormTitle.textContent = 'Create Entry';
   viewSwap('entry-form');
 });
@@ -282,7 +283,7 @@ $tagBox.addEventListener('click', function (event) {
       }
     } else {
       for (let i = 0; i < data.newTags.length; i++) {
-        if ($tagText === data.editing.tags[i]) {
+        if ($tagText === data.newTags[i]) {
           data.newTags.splice(i, 1);
           $tagToDelete.remove();
         }
@@ -339,8 +340,13 @@ function prefillTags(event) {
   $tagInput.className = 'tag-input';
   if (data.editing !== null) { // load previous tabs into the modal if editing
     for (let i = 0; i < data.editing.tags.length; i++) {
-      var previousTag = renderTag(data.editing.tags[i]);
-      $tagUl.prepend(previousTag);
+      var previousEditTag = renderTag(data.editing.tags[i]);
+      $tagUl.prepend(previousEditTag);
+    }
+  } else {
+    for (let i = 0; i < data.newTags.length; i++) {
+      var previousNewTag = renderTag(data.newTags[i]);
+      $tagUl.prepend(previousNewTag);
     }
   }
 }
