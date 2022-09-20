@@ -20,6 +20,7 @@ var $addTag = document.querySelector('.tag-btn');
 var $tagModal = document.querySelector('.tag-modal');
 var $tagUl = document.querySelector('.tag-box ul');
 var $tagInput = document.querySelector('.tag-box input');
+var $tagBox = document.querySelector('.tag-box');
 
 // Event Listeners
 
@@ -268,6 +269,28 @@ $tagInput.addEventListener('keyup', function (event) { // add new tag to html
   }
 });
 
+$tagBox.addEventListener('click', function (event) {
+  if (event.target.className === 'fa-regular fa-circle-xmark') {
+    var $tagToDelete = event.target.closest('li');
+    var $tagText = $tagToDelete.textContent;
+    if (data.editing !== null) {
+      for (let i = 0; i < data.editing.tags.length; i++) {
+        if ($tagText === data.editing.tags[i]) {
+          data.editing.tags.splice(i, 1);
+          $tagToDelete.remove();
+        }
+      }
+    } else {
+      for (let i = 0; i < data.newTags.length; i++) {
+        if ($tagText === data.editing.tags[i]) {
+          data.newTags.splice(i, 1);
+          $tagToDelete.remove();
+        }
+      }
+    }
+  }
+});
+
 function renderTag(tagText) { // returns a tag with appropriate text
   /**
    * <li class="tag">
@@ -307,6 +330,7 @@ function addTag(event) { // stores the new tag on the entries object for new ent
       });
     }
   }
+  $tagInput.value = '';
 }
 
 // Adjust View //

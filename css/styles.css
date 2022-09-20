@@ -223,6 +223,7 @@ img.entry {
 .tag-input {
   flex: 1;
   margin: 0.25rem;
+  min-width: 50px;
 }
 
 .tag {
